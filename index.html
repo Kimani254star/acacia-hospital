@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Tech Store</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body{
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif, sans-serif;
+  margin:0;
+  background:#f5f5f5;
+}
+
+body.dark{
+  background:#111;
+  color:#fff;
+}
+
+header{
+  background:#111;
+  color:#fff;
+  padding:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+#container{
+  display:flex;
+  gap:20px;
+  padding:20px;
+}
+
+#filters{
+  width:260px;
+}
+
+#grid{
+  flex:1;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:15px;
+}
+
+.card{
+  background:#fff;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  text-align:center;
+}
+
+body.dark .card{
+  background:#1e1e1e;
+}
+
+.card img{
+  width:100%;
+  height:150px;
+  object-fit:cover;
+  border-radius:8px;
+}
+
+button{
+  padding:8px;
+  margin-top:8px;
+  cursor:pointer;
+}
+
+.add{
+  background:#b30000;
+  color:#fff;
+  border:none;
+  width:100%;
+}
+
+.instock{color:green;}
+.outstock{color:red;}
+
+#viewModal, #cartModal{
+  display:none;
+  position:fixed;
+  top:15%;
+  left:50%;
+  transform:translateX(-50%);
+  background:#fff;
+  padding:20px;
+  border-radius:10px;
+  width:300px;
+  z-index:999;
+}
+
+body.dark #viewModal,
+body.dark #cartModal{
+  background:#222;
+}
+.top-icons {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.top-icons a {
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.footer{
+  background:#111;
+  color:white;
+  padding:40px 20px;
+  margin-top:40px;
+}
+
+.footer-container{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:20px;
+}
+
+.footer-section{
+  flex:1;
+  min-width:180px;
+}
+
+.footer-section h3,
+.footer-section h4{
+  margin-bottom:10px;
+}
+
+.footer-section p{
+  font-size:14px;
+  margin:5px 0;
+}
+
+.footer-bottom{
+  text-align:center;
+  margin-top:20px;
+  border-top:1px solid #444;
+  padding-top:10px;
+  font-size:13px;
+}
+.love{
+  width:100%;
+  padding:8px;
+  margin-top:5px;
+  border:none;
+  cursor:pointer;
+  background:#eee;
+  border-radius:6px;
+}
+
+.love.active{
+  background:#ff4d6d;
+  color:white;
+}
+.top-icons{
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+
+.icon-btn{
+  background:none;
+  border:none;
+  font-size:24px;
+  cursor:pointer;
+  text-decoration:none;
+}
+
+.heart{
+  color:red;
+}
+
+.whatsapp{
+  color:#25D366;
+}
+
+@media(max-width:800px){
+  #container{flex-direction:column;}
+}
+</style>
+</head>
+
+<body>
+
+<header style="display:flex; align-items:center; justify-content:space-between;">
+
+  <div style="display:flex; align-items:center; gap:10px;">
+    <img src="logo.png" alt="Logo" style="width:40px; height:40px; border-radius:6px;">
+    <h2 style="margin:0;">Smart Tech Store</h2>
+  </div>
+
+  <div id="motto" style="font-size:14px; color:#ccc;"></div>
+
+  
+  <div>
+    <button onclick="toggleTheme()">🌙</button>
+    <button onclick="showCart()">🛒 Cart</button>
+  </div>
+
+</header>
+
+<section id="container">
+
+<div id="filters">
+
+<input type="text" id="search" placeholder="Search..." oninput="applyFilters()" style="width:100%;padding:8px;margin-bottom:15px;">
+
+<h3>Category</h3>
+<label><input type="checkbox" value="Pain Relief" onchange="applyFilters()"> Pain Relief</label><br>
+<label><input type="checkbox" value="Cold & Flu" onchange="applyFilters()"> Cold & Flu</label><br>
+<label><input type="checkbox" value="Vitamins" onchange="applyFilters()"> Vitamins</label><br>
+<label><input type="checkbox" value="First Aid" onchange="applyFilters()"> First Aid</label><br>
+<label><input type="checkbox" value="Devices" onchange="applyFilters()"> Medical Devices</label><br>
+<label><input type="checkbox" value="Allergy" onchange="applyFilters()"> Allergy</label><br>
+<label><input type="checkbox" value="Digestive Health" onchange="applyFilters()"> Digestive Health</label><br>
+<label><input type="checkbox" value="Skin Care" onchange="applyFilters()"> Skin Care</label><br>
+<label><input type="checkbox" value="Diabetes Care" onchange="applyFilters()"> Diabetes Care</label><br>
+<label><input type="checkbox" value="Heart Health" onchange="applyFilters()"> Heart Health</label><br>
+<label><input type="checkbox" value="Eye Care" onchange="applyFilters()"> Eye Care</label><br>
+<label><input type="checkbox" value="Baby Care" onchange="applyFilters()"> Baby Care</label><br>
+
+<h3>Type</h3>
+<label><input type="checkbox" value="Tablet" data-type="type" onchange="applyFilters()"> Tablets</label><br>
+<label><input type="checkbox" value="Capsule" data-type="type" onchange="applyFilters()"> Capsules</label><br>
+<label><input type="checkbox" value="Syrup" data-type="type" onchange="applyFilters()"> Syrups</label><br>
+<label><input type="checkbox" value="Cream" data-type="type" onchange="applyFilters()"> Creams</label><br>
+<label><input type="checkbox" value="Gel" data-type="type" onchange="applyFilters()"> Gels</label><br>
+<label><input type="checkbox" value="Injection" data-type="type" onchange="applyFilters()"> Injections</label><br>
+<label><input type="checkbox" value="Drops" data-type="type" onchange="applyFilters()"> Drops</label><br>
+<label><input type="checkbox" value="Inhaler" data-type="type" onchange="applyFilters()"> Inhalers</label><br>
+
+<h3>Price</h3>
+<label><input type="checkbox" value="under500" data-type="price" onchange="applyFilters()"> Under 500</label><br>
+<label><input type="checkbox" value="500-1500" data-type="price" onchange="applyFilters()"> 500–1500</label><br>
+<label><input type="checkbox" value="1500-3000" data-type="price" onchange="applyFilters()"> 1500–3000</label><br>
+<label><input type="checkbox" value="3000plus" data-type="price" onchange="applyFilters()"> Above 3000</label><br>
+
+<h3>Brand</h3>
+<label><input type="checkbox" value="GSK" data-type="brand" onchange="applyFilters()"> GSK</label><br>
+<label><input type="checkbox" value="Pfizer" data-type="brand" onchange="applyFilters()"> Pfizer</label><br>
+<label><input type="checkbox" value="Bayer" data-type="brand" onchange="applyFilters()"> Bayer</label><br>
+
+<h3>Availability</h3>
+<label><input type="checkbox" value="In Stock" data-type="availability" onchange="applyFilters()"> In Stock</label><br>
+<label><input type="checkbox" value="Out of Stock" data-type="availability" onchange="applyFilters()"> Out of Stock</label><br>
+
+<button onclick="clearFilters()">Clear Filters</button>
+</div>
+
+<div id="grid"></div>
+
+</section>
+<div id="viewModal" style="display:none; position:fixed; top:10; left:10; width:100%; height:100%;
+background:rgba(0,0,0,0.6);">
+
+  <div style="background:#fff; width:320px; margin:80px auto; padding:15px; border-radius:10px; text-align:center;">
+
+    <img id="viewImg" style="width:100%; height:200px; object-fit:cover; border-radius:10px;">
+
+    <h3 id="viewName"></h3>
+    <p id="viewPrice"></p>
+    <p id="viewCategory"></p>
+    <p id="viewABV"></p>
+    <p id="viewCountry"></p>
+    <p id="viewBrand"></p>
+    <p id="viewStock"></p>
+    <p id="viewDesc" style="font-size:13px; text-align:left;"></p>
+
+    <button onclick="closeView()">Close</button>
+
+  </div>
+</div>
+
+<div id="cartModal">
+<h3>Your Order</h3>
+<ul id="cartList"></ul>
+<p><b>Total: KES <span id="total">0</span></b></p>
+<button onclick="checkout()">WhatsApp Order</button>
+<button onclick="closeCart()">Close</button>
+</div>
+
+<footer class="footer">
+
+<div class="footer-container">
+
+  <div class="footer-section">
+    <h3>🛒 Smart Tech Store</h3>
+    <p>Your trusted shop for phones, laptops, and accessories.</p>
+  </div>
+
+ <div class="footer-section">
+  <h4>📞 Contact Us</h4>
+  <p>📱 Phone: +254 731 858 997</p>
+
+  <p>
+    💬 <a href="https://wa.me/254731858997" target="_blank" style="color:#25D366;">WhatsApp</a>
+  </p>
+
+  <p>📧 Email: support@smarttech.com</p>
+  <p>📍 Nairobi, Kenya</p>
+
+  <div style="margin-top:10px; font-size:22px; display:flex; gap:12px;">
+    
+    <a href="https://wa.me/254731858997" target="_blank" style="color:#25D366;">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <a href="https://facebook.com" target="_blank" style="color:#1877F2;">
+    <i class="fab fa-facebook-f"></i>
+  </a>
+
+  <a href="https://instagram.com" target="_blank" style="color:#E4405F;">
+    <i class="fab fa-instagram"></i>
+  </a>
+
+
+</div>
+
+</div>
+
+  <div class="footer-section">
+    <h4>💳 Payment</h4>
+    <p>M-PESA Till: 123456</p>
+    <p>Visa / MasterCard</p>
+    <p>Cash on Delivery</p>
+  </div>
+
+  <div class="footer-section">
+    <h4>📜 Terms</h4>
+    <p>No refunds after 7 days</p>
+    <p>Warranty where stated</p>
+    <p>Prices may change</p>
+  </div>
+
+</div>
+
+<div class="footer-bottom">
+  <p>© 2026Acacia Liquor Store</p>
+</div>
+
+</footer>
+
+<script>
+const mottos = [
+  "🚚 Fast & Reliable Delivery Across Kenya",
+  "✅ Trusted Quality Medicines & Health Products",
+  "💰 Affordable Prices + Special Discounts Available",
+  "📞 Call / WhatsApp: +254 731 858 997",
+  "💳 Flexible Payment Plans Available (M-PESA, Card, Cash)",
+  "⚡ Order Now – Quick Service & Secure Payments"
+];
+
+let index = 0;
+
+function changeMotto(){
+  document.getElementById("motto").textContent = mottos[index];
+  index = (index + 1) % mottos.length;
+}
+
+setInterval(changeMotto, 2000);
+changeMotto();
+
+const products = [
+{name:"Panadol Extra",category:"Pain Relief",type:"Tablet",price:250,brand:"GSK",availability:"In Stock"},
+{name:"Ibuprofen 400mg",category:"Pain Relief",type:"Tablet",price:300,brand:"Pfizer",availability:"In Stock"},
+
+{name:"Cough Syrup Benylin",category:"Cold & Flu",type:"Syrup",price:450,brand:"Johnson",availability:"In Stock"},
+{name:"Flu Relief Capsules",category:"Cold & Flu",type:"Capsule",price:700,brand:"GSK",availability:"Out of Stock"},
+
+{name:"Vitamin C 1000mg",category:"Vitamins",type:"Tablet",price:600,brand:"NatureMade",availability:"In Stock"},
+{name:"Zinc Supplements",category:"Vitamins",type:"Tablet",price:800,brand:"NatureMade",availability:"In Stock"},
+
+{name:"Dettol Antiseptic",category:"First Aid",type:"Liquid",price:350,brand:"Reckitt",availability:"In Stock"},
+{name:"Bandage Roll",category:"First Aid",type:"Accessory",price:150,brand:"Local",availability:"In Stock"},
+
+{name:"Digital BP Monitor",category:"Devices",type:"Device",price:2500,brand:"Omron",availability:"In Stock"},
+{name:"Thermometer",category:"Devices",type:"Device",price:800,brand:"Omron",availability:"In Stock"},
+
+{name:"Antihistamine Tablets",category:"Allergy",type:"Tablet",price:500,brand:"Pfizer",availability:"In Stock"},
+{name:"Allergy Syrup",category:"Allergy",type:"Syrup",price:650,brand:"GSK",availability:"Out of Stock"},
+
+{name:"Antacid Tablets",category:"Digestive Health",type:"Tablet",price:400,brand:"Bayer",availability:"In Stock"},
+{name:"ORS Sachets",category:"Digestive Health",type:"Powder",price:200,brand:"Local",availability:"In Stock"},
+
+{name:"Acne Cream",category:"Skin Care",type:"Cream",price:900,brand:"Nivea",availability:"In Stock"},
+{name:"Antifungal Cream",category:"Skin Care",type:"Cream",price:750,brand:"GSK",availability:"In Stock"},
+
+{name:"Glucose Meter",category:"Diabetes Care",type:"Device",price:3000,brand:"AccuCheck",availability:"In Stock"},
+{name:"Insulin Syringes",category:"Diabetes Care",type:"Injection",price:1200,brand:"BD",availability:"In Stock"},
+
+{name:"Blood Pressure Tablets",category:"Heart Health",type:"Tablet",price:1500,brand:"Pfizer",availability:"In Stock"},
+{name:"Cholesterol Control Tablets",category:"Heart Health",type:"Tablet",price:1800,brand:"Bayer",availability:"Out of Stock"},
+
+{name:"Eye Drops",category:"Eye Care",type:"Drops",price:500,brand:"Allergan",availability:"In Stock"},
+{name:"Lubricating Eye Gel",category:"Eye Care",type:"Gel",price:950,brand:"Allergan",availability:"In Stock"},
+
+{name:"Baby Syrup",category:"Baby Care",type:"Syrup",price:400,brand:"Johnson",availability:"In Stock"},
+{name:"Baby Lotion",category:"Baby Care",type:"Cream",price:700,brand:"Johnson",availability:"In Stock"}
+];
+
+
+let cart = {};
+
+function display(list = products){
+const grid = document.getElementById("grid");
+grid.innerHTML = "";
+
+list.forEach(p=>{
+grid.innerHTML += `
+<div class="card">
+
+<img src="${p.image}" alt="${p.name}"
+onclick="viewProduct('${p.name}')"
+style="width:100%; height:180px; object-fit:cover; border-radius:10px; cursor:pointer;">
+
+<h3>${p.name}</h3>
+<p>KES ${p.price}</p>
+<p>${p.category} | ${p.size}</p>
+
+<p class="${p.stock > 0 ? 'instock' : 'outstock'}">
+${p.stock > 0 ? 'Available' : 'Out of stock'}
+</p>
+
+<div class="top-icons">
+
+  <button onclick="add('${p.name}')" class="icon-btn">🛒</button>
+
+  <button onclick="toggleLove('${p.name}')" class="icon-btn heart">
+    ${likes[p.name] ? "❤️" : "🤍"}
+  </button>
+
+ <a href="https://wa.me/254731858997" target="_blank" style="color:#25D366;">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <a href="https://instagram.com" target="_blank" style="color:#E4405F;">
+    <i class="fab fa-instagram"></i>
+  </a>
+
+</div>
+
+</div>
+`;
+});
+}
+let likes = {};
+
+function toggleLove(name){
+  if(likes[name]){
+    delete likes[name];
+  } else {
+    likes[name] = true;
+  }
+  display(products);
+}
+
+function viewProduct(name){
+  const p = products.find(x => x.name === name);
+  if(!p) return;
+
+  document.getElementById("viewImg").src = p.image;
+  document.getElementById("viewName").textContent = p.name;
+  document.getElementById("viewPrice").textContent = "KES " + p.price;
+  document.getElementById("viewCategory").textContent = p.category + " | " + (p.size || "");
+
+  document.getElementById("viewABV").textContent = "ABV: " + (p.abv || "N/A");
+  document.getElementById("viewCountry").textContent = "Country: " + (p.country || "N/A");
+  document.getElementById("viewBrand").textContent = "Brand: " + (p.brand || "N/A");
+  document.getElementById("viewStock").textContent = "Availability: " + (p.stock || "In Stock");
+  document.getElementById("viewDesc").textContent = p.description || "";
+
+  document.getElementById("viewModal").style.display = "block";
+}
+
+function closeView(){
+document.getElementById("viewModal").style.display = "none";
+}
+
+function applyFilters() {
+  const search = document.getElementById("search").value.toLowerCase();
+
+  const checked = [...document.querySelectorAll("input[type=checkbox]:checked")];
+
+  const category = checked
+    .filter(c => !c.dataset.type)
+    .map(c => c.value);
+
+  const type = checked
+    .filter(c => c.dataset.type === "type")
+    .map(c => c.value);
+
+  const price = checked
+    .filter(c => c.dataset.type === "price")
+    .map(c => c.value);
+
+  const brand = checked
+    .filter(c => c.dataset.type === "brand")
+    .map(c => c.value);
+
+  const availability = checked
+    .filter(c => c.dataset.type === "availability")
+    .map(c => c.value);
+
+  const filtered = products.filter(p => {
+
+    const matchSearch = p.name.toLowerCase().includes(search);
+
+    const matchCategory = !category.length || category.includes(p.category);
+
+    const matchType = !type.length || type.includes(p.type);
+
+    const matchBrand = !brand.length || brand.includes(p.brand);
+
+    const matchAvailability = !availability.length || availability.includes(p.availability);
+
+    const matchPrice = !price.length || price.some(r => {
+      if (r === "under500") return p.price < 500;
+      if (r === "500-1500") return p.price >= 500 && p.price <= 1500;
+      if (r === "1500-3000") return p.price > 1500 && p.price <= 3000;
+      if (r === "3000plus") return p.price > 3000;
+    });
+
+    return (
+      matchSearch &&
+      matchCategory &&
+      matchType &&
+      matchPrice &&
+      matchBrand &&
+      matchAvailability
+    );
+  });
+
+  display(filtered);
+}
+function clearFilters(){
+document.querySelectorAll("input[type=checkbox]").forEach(c=>c.checked=false);
+document.getElementById("search").value = "";
+display(products);
+}
+
+function add(name){
+const p = products.find(x => x.name === name);
+if(!p) return;
+
+if(p.stock <= 0){
+alert("Out of stock");
+return;
+}
+
+if(!cart[name]){
+cart[name] = {qty:1, price:p.price};
+}else{
+cart[name].qty++;
+}
+
+p.stock--;
+display(products);
+}
+
+function showCart(){
+const list = document.getElementById("cartList");
+list.innerHTML = "";
+let total = 0;
+
+for(const [name,item] of Object.entries(cart)){
+const sub = item.qty * item.price;
+total += sub;
+list.innerHTML += `<li>${name} x${item.qty} = KES ${sub}</li>`;
+}
+
+document.getElementById("total").textContent = total;
+document.getElementById("cartModal").style.display = "block";
+}
+
+function closeCart(){
+document.getElementById("cartModal").style.display = "none";
+}
+
+function checkout(){
+let msg = "🛒 Liquor Order:%0A%0A";
+let total = 0;
+
+for(const [name,item] of Object.entries(cart)){
+const sub = item.qty * item.price;
+msg += `${name} x${item.qty} = KES ${sub}%0A`;
+total += sub;
+}
+
+msg += `%0A💰 Total: KES ${total}`;
+
+window.open(`https://wa.me/254731858997?text=${msg}`, "_blank");
+}
+
+function toggleTheme(){
+document.body.classList.toggle("dark");
+}
+
+display(products);
+</script>
+
+</body>
+</html>
