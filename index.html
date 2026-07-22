@@ -3,615 +3,1575 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Tech Store</title>
+<title>Apex Pharmacy & Medical Supplies</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
 <style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Cambria', sans-serif;
+}
+
 body{
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif, sans-serif;
-  margin:0;
-  background:#f5f5f5;
+    background:#f4f7f6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-body.dark{
-  background:#111;
-  color:#fff;
+.topbar{
+    background:#0f2c59;
+    color:#fff;
+    padding:15px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-header{
-  background:#111;
-  color:#fff;
-  padding:10px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+.logo{
+    font-size:24px;
+    font-weight:bold;
+    cursor: pointer;
+    user-select: none;
+    color: #00a884;
 }
 
-#container{
-  display:flex;
-  gap:20px;
-  padding:20px;
+.logo span {
+    color: #fff;
 }
 
-#filters{
-  width:260px;
+.nav{
+    display:flex;
+    gap:15px;
+    align-items: center;
 }
 
-#grid{
-  flex:1;
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:15px;
+.nav a{
+    color:#fff;
+    text-decoration:none;
+    font-size:14px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    transition:0.3s;
+    padding: 6px 12px;
+    border-radius: 4px;
 }
 
-.card{
-  background:#fff;
-  padding:15px;
-  border-radius:10px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
-  text-align:center;
+.nav a:hover, .nav a.active-nav{
+    color:#fff;
+    background: #00a884;
 }
 
-body.dark .card{
-  background:#1e1e1e;
+.cart-icon-btn {
+    background: #00a884;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.card img{
-  width:100%;
-  height:150px;
-  object-fit:cover;
-  border-radius:8px;
+.container{
+    display:flex;
+    gap:25px;
+    padding:30px;
+    flex: 1;
 }
 
-button{
-  padding:8px;
-  margin-top:8px;
-  cursor:pointer;
+.sidebar{
+    width:280px;
+    background:#fff;
+    padding:20px;
+    border-radius:10px;
+    height:fit-content;
+    box-shadow:0 2px 10px rgba(0,0,0,0.08);
 }
 
-.add{
-  background:#b30000;
-  color:#fff;
-  border:none;
-  width:100%;
+.sidebar h3{
+    margin-bottom:15px;
+    color: #0f2c59;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 8px;
 }
 
-.instock{color:green;}
-.outstock{color:red;}
-
-#viewModal, #cartModal{
-  display:none;
-  position:fixed;
-  top:15%;
-  left:50%;
-  transform:translateX(-50%);
-  background:#fff;
-  padding:20px;
-  border-radius:10px;
-  width:300px;
-  z-index:999;
+.filter-group{
+    margin-bottom:15px;
 }
 
-body.dark #viewModal,
-body.dark #cartModal{
-  background:#222;
-}
-.top-icons {
-  display: flex;
-  align-items: center;
-  gap: 10px; 
+.filter-group label{
+    display:block;
+    margin-bottom:6px;
+    font-size:13px;
+    font-weight: bold;
+    color: #444;
 }
 
-.icon-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
+.filter-group input,
+.filter-group select{
+    width:100%;
+    padding:10px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    font-size: 13px;
 }
 
-.top-icons a {
-  font-size: 18px;
-  text-decoration: none;
+.price-inputs {
+    display: flex;
+    gap: 8px;
 }
 
-.footer{
-  background:#111;
-  color:white;
-  padding:40px 20px;
-  margin-top:40px;
+.apply-btn, .clear-btn{
+    width:100%;
+    background:#0f2c59;
+    color:#fff;
+    border:none;
+    padding:12px;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:bold;
+    margin-bottom: 8px;
+    transition: 0.3s;
 }
 
-.footer-container{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:20px;
+.clear-btn { background: #666; }
+.apply-btn:hover{ background:#00a884; }
+.clear-btn:hover{ background:#444; }
+
+.content{ flex:1; }
+
+.search-bar{
+    background:#fff;
+    padding:18px;
+    border-radius:10px;
+    display:flex;
+    gap:15px;
+    margin-bottom:25px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.08);
 }
 
-.footer-section{
-  flex:1;
-  min-width:180px;
+.search-bar input{
+    flex:1;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:6px;
 }
 
-.footer-section h3,
-.footer-section h4{
-  margin-bottom:10px;
+.search-btn{
+    background:#00a884;
+    color:#fff;
+    border:none;
+    padding:12px 25px;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:bold;
 }
 
-.footer-section p{
-  font-size:14px;
-  margin:5px 0;
+.item-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+    gap:20px;
 }
 
-.footer-bottom{
-  text-align:center;
-  margin-top:20px;
-  border-top:1px solid #444;
-  padding-top:10px;
-  font-size:13px;
-}
-.love{
-  width:100%;
-  padding:8px;
-  margin-top:5px;
-  border:none;
-  cursor:pointer;
-  background:#eee;
-  border-radius:6px;
+.item-card{
+    background:#fff;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 2px 12px rgba(0,0,0,0.08);
+    transition:0.3s;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
-.love.active{
-  background:#ff4d6d;
-  color:white;
-}
-.top-icons{
-  display:flex;
-  gap:20px;
-  align-items:center;
+.item-card:hover{ transform:translateY(-5px); }
+
+.item-image{
+    width:100%;
+    height:220px;
+    object-fit:cover;
 }
 
-.icon-btn{
-  background:none;
-  border:none;
-  font-size:24px;
-  cursor:pointer;
-  text-decoration:none;
+.sale-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: #e74c3c;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    z-index: 5;
 }
 
-.heart{
-  color:red;
+.card-body{
+    padding:18px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
-.whatsapp{
-  color:#25D366;
+.item-title{
+    font-size:16px;
+    font-weight:bold;
+    margin-bottom:6px;
+    color: #111;
 }
 
-@media(max-width:800px){
-  #container{flex-direction:column;}
+.stars {
+    color: #f39c12;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.item-info{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    font-size:12px;
+    color:#666;
+    margin-bottom:15px;
+    background: #fdfdfd;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #f0f0f0;
+}
+
+.rx-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+}
+.rx-required { background: #fadbd8; color: #78281f; }
+.rx-otc { background: #d4efdf; color: #145a32; }
+
+.card-buttons{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap:6px;
+    margin-top: auto;
+}
+
+.inquiry-btn, .view-btn, .add-cart-btn{
+    border:none;
+    padding:9px 5px;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size: 12px;
+    text-align: center;
+}
+
+.add-cart-btn { background: #27ae60; color: #fff; }
+.inquiry-btn{ background:#0f2c59; color:#fff; }
+.view-btn{ background:#00a884; color:#fff; }
+
+.inquiry-btn:hover, .view-btn:hover, .add-cart-btn:hover{ opacity:0.9; }
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.8);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+    padding:20px;
+}
+
+.modal-content{
+    background:#fff;
+    width:100%;
+    max-width:850px;
+    border-radius:10px;
+    overflow:hidden;
+    position:relative;
+    max-height:95vh;
+    overflow-y:auto;
+}
+
+.close-modal{
+    position:absolute;
+    top:15px;
+    right:15px;
+    width:35px;
+    height:35px;
+    border:none;
+    border-radius:50%;
+    background:#0f2c59;
+    color:#fff;
+    cursor:pointer;
+    z-index:10;
+}
+
+.modal-gallery{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    padding:20px;
+}
+
+.main-image img{
+    width:100%;
+    height:300px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+.related-section {
+    padding: 20px;
+    background: #f9f9f9;
+    border-top: 1px solid #eee;
+}
+
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.related-card {
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    cursor: pointer;
+}
+
+.related-card img {
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.payment-methods {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.payment-method-card {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.payment-method-card.active {
+    border-color: #00a884;
+    background: #e6f8f3;
+}
+
+.admin-sidebar-menu {
+    list-style: none;
+    margin-top: 10px;
+}
+
+.admin-sidebar-menu li {
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.2s;
+}
+
+.admin-sidebar-menu li:hover, .admin-sidebar-menu li.active-admin-tab {
+    background: #00a884;
+    color: #fff;
+}
+
+.admin-panel-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    min-height: 400px;
+}
+
+.admin-panel-card h2 {
+    margin-bottom: 20px;
+    border-bottom: 2px solid #efefef;
+    padding-bottom: 10px;
+    color: #111;
+}
+
+.admin-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.admin-data-table th, .admin-data-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.admin-data-table th {
+    background: #f9f9f9;
+    font-weight: bold;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-success { background: #e6f4ea; color: #137333; }
+.status-pending { background: #ffeec2; color: #b06000; }
+
+.action-btn {
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 4px;
+}
+.btn-edit { background: #2980b9; color: #fff; }
+.btn-delete { background: #c0392b; color: #fff; }
+
+.page-section {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+
+.floating-social-container {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 1000;
+}
+
+.floating-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 22px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+}
+
+.floating-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35);
+}
+
+.btn-whatsapp {
+    background-color: #25d366;
+}
+
+.btn-instagram {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+}
+
+.btn-facebook {
+    background-color: #1877f2;
+}
+
+.btn-x {
+    background-color: #000000;
+}
+
+footer {
+    background: #0f2c59;
+    color: #fff;
+    margin-top: auto;
+    padding: 40px 40px 20px 40px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-section h4 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    color: #00a884;
+}
+
+.footer-section p, .footer-section ul li a {
+    font-size: 14px;
+    color: #bbb;
+    text-decoration: none;
+    line-height: 1.6;
+}
+
+.footer-section ul { list-style: none; }
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #1a3f7a;
+    font-size: 13px;
+    color: #888;
+}
+
+@media(max-width:900px){
+    .container{ flex-direction:column; }
+    .sidebar{ width:100%; }
+    .search-bar{ flex-direction:column; }
+    .modal-gallery{ grid-template-columns:1fr; }
 }
 </style>
 </head>
-
 <body>
 
-<header style="display:flex; align-items:center; justify-content:space-between;">
-
-  <div style="display:flex; align-items:center; gap:10px;">
-  <img src="acacia-logo.png" alt="Acacia Pharmacy Logo" style="width:45px; height:45px;">
-  <h2 style="margin:0; color:#1b8f3c; font-weight:bold;">
-    Acacia Pharmacy Store
-  </h2>
+<div class="topbar">
+    <div class="logo" id="mainLogo" title="Click to open Pharmacist Login">APEX <span>PHARMACY</span></div>
+    <div class="nav" id="mainNavbar">
+        <a href="#" class="active-nav" onclick="showPage('storefront', this)"><i class="fa fa-pills"></i> All Medicine</a>
+        <a href="#" onclick="showPage('prescription', this)"><i class="fa fa-prescription-bottle-alt"></i> Prescription (Rx)</a>
+        <a href="#" onclick="showPage('otc', this)"><i class="fa fa-medkit"></i> Over-The-Counter</a>
+        <a href="#" onclick="showPage('supplements', this)"><i class="fa fa-capsules"></i> Vitamins & Wellness</a>
+        <a href="#" onclick="showPage('firstaid', this)"><i class="fa fa-first-aid"></i> First Aid & Care</a>
+        <a href="#" onclick="showPage('delivery', this)"><i class="fa fa-truck-medical"></i> Rx Delivery</a>
+        <a href="#" onclick="showPage('contact', this)"><i class="fa fa-user-md"></i> Pharmacist Consult</a>
+        <button class="cart-icon-btn" onclick="openCartModal()">
+            <i class="fa fa-shopping-basket"></i> Cart (<span id="cartCount">0</span>)
+        </button>
+    </div>
 </div>
 
-  <div id="motto" style="font-size:14px; color:#ccc;"></div>
-
-  
-  <div>
-    <button onclick="toggleTheme()">🌙</button>
-    <button onclick="showCart()">🛒 Cart</button>
-  </div>
-
-</header>
-
-<section id="container">
-
-<div id="filters">
-
-<input type="text" id="search" placeholder="Search..." oninput="applyFilters()" style="width:100%;padding:8px;margin-bottom:15px;">
-
-<h3>Category</h3>
-<label><input type="checkbox" value="Pain Relief" onchange="applyFilters()"> Pain Relief</label><br>
-<label><input type="checkbox" value="Cold & Flu" onchange="applyFilters()"> Cold & Flu</label><br>
-<label><input type="checkbox" value="Vitamins" onchange="applyFilters()"> Vitamins</label><br>
-<label><input type="checkbox" value="First Aid" onchange="applyFilters()"> First Aid</label><br>
-<label><input type="checkbox" value="Devices" onchange="applyFilters()"> Medical Devices</label><br>
-<label><input type="checkbox" value="Allergy" onchange="applyFilters()"> Allergy</label><br>
-<label><input type="checkbox" value="Digestive Health" onchange="applyFilters()"> Digestive Health</label><br>
-<label><input type="checkbox" value="Skin Care" onchange="applyFilters()"> Skin Care</label><br>
-<label><input type="checkbox" value="Diabetes Care" onchange="applyFilters()"> Diabetes Care</label><br>
-<label><input type="checkbox" value="Heart Health" onchange="applyFilters()"> Heart Health</label><br>
-<label><input type="checkbox" value="Eye Care" onchange="applyFilters()"> Eye Care</label><br>
-<label><input type="checkbox" value="Baby Care" onchange="applyFilters()"> Baby Care</label><br>
-
-<h3>Type</h3>
-<label><input type="checkbox" value="Tablet" data-type="type" onchange="applyFilters()"> Tablets</label><br>
-<label><input type="checkbox" value="Capsule" data-type="type" onchange="applyFilters()"> Capsules</label><br>
-<label><input type="checkbox" value="Syrup" data-type="type" onchange="applyFilters()"> Syrups</label><br>
-<label><input type="checkbox" value="Cream" data-type="type" onchange="applyFilters()"> Creams</label><br>
-<label><input type="checkbox" value="Gel" data-type="type" onchange="applyFilters()"> Gels</label><br>
-<label><input type="checkbox" value="Injection" data-type="type" onchange="applyFilters()"> Injections</label><br>
-<label><input type="checkbox" value="Drops" data-type="type" onchange="applyFilters()"> Drops</label><br>
-<label><input type="checkbox" value="Inhaler" data-type="type" onchange="applyFilters()"> Inhalers</label><br>
-
-<h3>Price</h3>
-<label><input type="checkbox" value="under500" data-type="price" onchange="applyFilters()"> Under 500</label><br>
-<label><input type="checkbox" value="500-1500" data-type="price" onchange="applyFilters()"> 500–1500</label><br>
-<label><input type="checkbox" value="1500-3000" data-type="price" onchange="applyFilters()"> 1500–3000</label><br>
-<label><input type="checkbox" value="3000plus" data-type="price" onchange="applyFilters()"> Above 3000</label><br>
-
-<h3>Brand</h3>
-<label><input type="checkbox" value="GSK" data-type="brand" onchange="applyFilters()"> GSK</label><br>
-<label><input type="checkbox" value="Pfizer" data-type="brand" onchange="applyFilters()"> Pfizer</label><br>
-<label><input type="checkbox" value="Bayer" data-type="brand" onchange="applyFilters()"> Bayer</label><br>
-
-<h3>Availability</h3>
-<label><input type="checkbox" value="In Stock" data-type="availability" onchange="applyFilters()"> In Stock</label><br>
-<label><input type="checkbox" value="Out of Stock" data-type="availability" onchange="applyFilters()"> Out of Stock</label><br>
-
-<button onclick="clearFilters()">Clear Filters</button>
-</div>
-
-<div id="grid"></div>
-
-</section>
-<div id="viewModal" style="display:none; position:fixed; top:10; left:10; width:100%; height:100%;
-background:rgba(0,0,0,0.6);">
-
-  <div style="background:#fff; width:320px; margin:80px auto; padding:15px; border-radius:10px; text-align:center;">
-
-    <img id="viewImg" style="width:100%; height:200px; object-fit:cover; border-radius:10px;">
-
-    <h3 id="viewName"></h3>
-    <p id="viewPrice"></p>
-    <p id="viewCategory"></p>
-    <p id="viewABV"></p>
-    <p id="viewCountry"></p>
-    <p id="viewBrand"></p>
-    <p id="viewStock"></p>
-    <p id="viewDesc" style="font-size:13px; text-align:left;"></p>
-
-    <button onclick="closeView()">Close</button>
-
-  </div>
-</div>
-
-<div id="cartModal">
-<h3>Your Order</h3>
-<ul id="cartList"></ul>
-<p><b>Total: KES <span id="total">0</span></b></p>
-<button onclick="checkout()">WhatsApp Order</button>
-<button onclick="closeCart()">Close</button>
-</div>
-
-<footer class="footer">
-
-<div class="footer-container">
-
-  <div class="footer-section">
-    <h3>🛒 Smart Tech Store</h3>
-    <p>Your trusted shop for phones, laptops, and accessories.</p>
-  </div>
-
- <div class="footer-section">
-  <h4>📞 Contact Us</h4>
-  <p>📱 Phone: +254 731 858 997</p>
-
-  <p>
-    💬 <a href="https://wa.me/254731858997" target="_blank" style="color:#25D366;">WhatsApp</a>
-  </p>
-
-  <p>📧 Email: support@smarttech.com</p>
-  <p>📍 Nairobi, Kenya</p>
-
-  <div style="margin-top:10px; font-size:22px; display:flex; gap:12px;">
+<div class="container" id="publicContainer">
     
-    <a href="https://wa.me/254731858997" target="_blank" style="color:#25D366;">
-    <i class="fab fa-whatsapp"></i>
-  </a>
+    <div class="sidebar" id="mainFilterSidebar">
+        <h3><i class="fa fa-filter"></i> Pharmacy Filters</h3>
 
-  <a href="https://facebook.com" target="_blank" style="color:#1877F2;">
-    <i class="fab fa-facebook-f"></i>
-  </a>
+        <div class="filter-group">
+            <label>Search Drug or Active Ingredient</label>
+            <input type="text" id="filterKeyword" placeholder="e.g. Paracetamol, Amoxicillin">
+        </div>
 
-  <a href="https://instagram.com" target="_blank" style="color:#E4405F;">
-    <i class="fab fa-instagram"></i>
-  </a>
+        <div class="filter-group">
+            <label>Category</label>
+            <select id="filterCategory">
+                <option value="All">All Categories</option>
+                <option value="Prescription">Prescription (Rx)</option>
+                <option value="OTC Medicine">Over-The-Counter (OTC)</option>
+                <option value="Vitamins">Vitamins & Supplements</option>
+                <option value="First Aid">First Aid & Equipment</option>
+            </select>
+        </div>
 
+        <div class="filter-group">
+            <label>Price Range (KSh)</label>
+            <div class="price-inputs">
+                <input type="number" id="filterMinPrice" placeholder="Min">
+                <input type="number" id="filterMaxPrice" placeholder="Max">
+            </div>
+        </div>
 
+        <div class="filter-group">
+            <label>Manufacturer / Brand</label>
+            <select id="filterBrand">
+                <option value="All">All Manufacturers</option>
+                <option value="GSK">GSK</option>
+                <option value="Pfizer">Pfizer</option>
+                <option value="Novartis">Novartis</option>
+                <option value="Bayer">Bayer</option>
+                <option value="Seven Seas">Seven Seas</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label>Dosage Form</label>
+            <select id="filterForm">
+                <option value="All">All Forms</option>
+                <option value="Tablets">Tablets</option>
+                <option value="Capsules">Capsules</option>
+                <option value="Syrup">Syrup / Liquid</option>
+                <option value="Cream">Cream / Ointment</option>
+                <option value="Device">Medical Device</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label>Prescription Requirement</label>
+            <select id="filterRxType">
+                <option value="All">All Types</option>
+                <option value="Rx Required">Prescription Required</option>
+                <option value="OTC">OTC (No Rx Needed)</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label><input type="checkbox" id="filterInStockOnly"> In Stock Only</label>
+        </div>
+
+        <button class="apply-btn" onclick="applyFilters()">Apply Filters</button>
+        <button class="clear-btn" onclick="resetFilters()">Reset Filters</button>
+    </div>
+
+    <div class="content">
+        <div class="search-bar" id="topSearchSection">
+            <input type="text" id="topSearchBar" placeholder="Search medicines, active ingredients, painkillers, antibiotics...">
+            <button class="search-btn" onclick="topSearch()">Search</button>
+        </div>
+
+        <div id="catalogSection">
+            <h2 id="pageSectionTitle" style="margin-bottom:15px; color:#0f2c59;">Verified Pharmaceutical Products</h2>
+            <div class="item-grid" id="itemGrid"></div>
+        </div>
+
+        <div id="deliverySection" class="page-section" style="display:none;">
+            <h2><i class="fa fa-truck-medical"></i> Secure Medicine Delivery</h2>
+            <p style="margin: 10px 0 20px 0; color:#555;">Temperature-controlled, tamper-proof packaging for prescription drugs and medical supplies.</p>
+            
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px; margin-bottom: 25px;">
+                <div style="background:#e6f8f3; padding:20px; border-radius:8px; border:1px solid #a3e4d7;">
+                    <h3 style="color:#00a884;"><i class="fa fa-bolt"></i> Emergency Express Delivery</h3>
+                    <p style="font-size:14px; margin-top:5px; color:#444;">Urgent prescription fulfillment within 2 hours across major metro zones.</p>
+                </div>
+                <div style="background:#f4f4f4; padding:20px; border-radius:8px;">
+                    <h3 style="color:#0f2c59;"><i class="fa fa-file-prescription"></i> Rx Verification Protocol</h3>
+                    <p style="font-size:14px; margin-top:5px; color:#444;">Prescription medicines require a valid doctor's note upload or physical verification upon delivery.</p>
+                </div>
+            </div>
+
+            <form onsubmit="event.preventDefault(); alert('Shipping calculated! A pharmacist will verify your address.');" style="display:grid; gap:12px; max-width:500px;">
+                <h3>Estimate Delivery Rates</h3>
+                <select style="padding:10px; border-radius:6px; border:1px solid #ddd;" required>
+                    <option value="">Select Delivery Zone</option>
+                    <option>Zone A (CBD & Central Suburbs) - KSh 200</option>
+                    <option>Zone B (Outer Metro Area) - KSh 350</option>
+                    <option>Upcountry Nationwide Courier - KSh 550</option>
+                </select>
+                <input type="text" placeholder="Hospital / Medical Facility / Residence Address" required style="padding:10px; border-radius:6px; border:1px solid #ddd;">
+                <button type="submit" class="apply-btn">Check Rates</button>
+            </form>
+        </div>
+
+        <div id="contactSection" class="page-section" style="display:none;">
+            <h2><i class="fa fa-user-md"></i> Consult a Registered Pharmacist</h2>
+            <p style="margin-bottom:20px; color:#666;">Ask about drug interactions, dosage instructions, or request prescription fulfillment assistance.</p>
+            
+            <form onsubmit="event.preventDefault(); alert('Inquiry sent to our clinical pharmacist! We will contact you shortly.');" style="display:grid; gap:15px; max-width:600px;">
+                <input type="text" placeholder="Patient / Customer Name" required style="padding:12px; border:1px solid #ddd; border-radius:6px;">
+                <input type="email" placeholder="Email Address" required style="padding:12px; border:1px solid #ddd; border-radius:6px;">
+                <input type="tel" placeholder="Phone Number" required style="padding:12px; border:1px solid #ddd; border-radius:6px;">
+                <textarea rows="5" placeholder="Describe symptoms, medicine queries, or dosage advice needed..." required style="padding:12px; border:1px solid #ddd; border-radius:6px;"></textarea>
+                <button type="submit" class="apply-btn">Submit Consultation Request</button>
+            </form>
+        </div>
+    </div>
 </div>
 
+<div class="container" id="adminContainer" style="display: none;">
+    <div class="sidebar">
+        <h3>Pharmacy Portal</h3>
+        <ul class="admin-sidebar-menu">
+            <li class="active-admin-tab" onclick="switchAdminTab('revenue')"><i class="fa fa-wallet"></i> Pharmacy Revenue</li>
+            <li onclick="switchAdminTab('invoice')"><i class="fa fa-file-invoice-dollar"></i> Prescriptions & Invoices</li>
+            <li onclick="switchAdminTab('commission')"><i class="fa fa-percentage"></i> Staff Commission</li>
+            <li onclick="switchAdminTab('products')"><i class="fa fa-boxes-stacked"></i> Drug Inventory & Discounts</li>
+            <li onclick="switchAdminTab('settings')"><i class="fa fa-sliders-h"></i> Settings</li>
+        </ul>
+    </div>
+    
+    <div class="content">
+        <div id="panel-revenue" class="admin-panel-card">
+            <h2>Pharmacy Financial Summary</h2>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px;">
+                <div style="background:#f4f4f4; padding:20px; border-radius:8px;">
+                    <p style="color:#666; font-size:14px;">Total Drug Sales Revenue</p>
+                    <h3 id="revenueGrossSales" style="font-size:24px; margin-top:5px; color:#0f2c59;">KSh 0</h3>
+                </div>
+                <div style="background:#f4f4f4; padding:20px; border-radius:8px;">
+                    <p style="color:#666; font-size:14px;">Pharmacist Commission Payouts</p>
+                    <h3 id="revenueCommissionsPaid" style="font-size:24px; margin-top:5px; color:#00a884;">KSh 0</h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="panel-invoice" class="admin-panel-card" style="display: none;">
+            <h2>Prescription & Billing Records</h2>
+            <button class="apply-btn" style="width: auto; padding: 10px 20px; margin-bottom:15px;" onclick="openInvoiceModal()">+ Create Rx Invoice</button>
+            <table class="admin-data-table">
+                <thead>
+                    <tr><th>Rx ID</th><th>Patient</th><th>Medication</th><th>Pharmacist</th><th>Amount</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="adminInvoiceTableBody"></tbody>
+            </table>
+        </div>
+
+        <div id="panel-commission" class="admin-panel-card" style="display: none;">
+            <h2>Pharmacist Sales Commission</h2>
+            <table class="admin-data-table">
+                <thead>
+                    <tr><th>Staff Member</th><th>Role</th><th>Sales Volume</th><th>Comm Rate</th><th>Earned Payout</th></tr>
+                </thead>
+                <tbody id="adminCommissionTableBody"></tbody>
+            </table>
+        </div>
+
+        <div id="panel-products" class="admin-panel-card" style="display: none;">
+            <h2>Medication Inventory & Discount Management</h2>
+            <button class="apply-btn" style="width: auto; padding: 10px 20px; margin-bottom:15px;" onclick="openAddProductModal()">+ Add New Drug</button>
+            <table class="admin-data-table">
+                <thead>
+                    <tr><th>Drug Name</th><th>Category</th><th>Base Price</th><th>Discount %</th><th>Final Price</th><th>Stock</th><th>Action</th></tr>
+                </thead>
+                <tbody id="adminProductsTableBody"></tbody>
+            </table>
+        </div>
+
+        <div id="panel-settings" class="admin-panel-card" style="display: none;">
+            <h2>Pharmacy Staff Roster & Settings</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <div>
+                    <h3 style="font-size: 16px; margin-bottom: 15px; color:#00a884;">Register Pharmacist / Staff</h3>
+                    <form id="addEmployeeForm" style="display: grid; gap: 12px; background: #f9f9f9; padding: 20px; border-radius: 8px;">
+                        <input type="text" id="empName" placeholder="Full Name" required style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+                        <input type="email" id="empEmail" placeholder="Email Address" required style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+                        <select id="empRole" style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+                            <option value="Pharmacist">Clinical Pharmacist</option>
+                            <option value="Pharmacy Assistant">Pharmacy Assistant</option>
+                        </select>
+                        <input type="number" id="empCommRate" min="0" max="100" value="3" step="0.1" placeholder="Comm Rate %" required style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+                        <button type="submit" class="apply-btn">Save Pharmacist</button>
+                    </form>
+                </div>
+                <div>
+                    <h3 style="font-size: 16px; margin-bottom: 15px; color:#00a884;">Active Pharmacy Staff</h3>
+                    <table class="admin-data-table">
+                        <thead><tr><th>Name</th><th>Role</th><th>Comm Rate</th></tr></thead>
+                        <tbody id="adminEmployeesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-  <div class="footer-section">
-    <h4>💳 Payment</h4>
-    <p>M-PESA Till: 123456</p>
-    <p>Visa / MasterCard</p>
-    <p>Cash on Delivery</p>
-  </div>
-
-  <div class="footer-section">
-    <h4>📜 Terms</h4>
-    <p>No refunds after 7 days</p>
-    <p>Warranty where stated</p>
-    <p>Prices may change</p>
-  </div>
-
+<div class="modal" id="adminLoginModal">
+    <div class="modal-content" style="max-width: 400px; padding: 30px;">
+        <button class="close-modal" onclick="closeModal('adminLoginModal')"><i class="fa fa-times"></i></button>
+        <h3 style="margin-bottom: 20px; text-align: center;">Pharmacist Portal Login</h3>
+        <form id="adminLoginForm" style="display: grid; gap: 15px;">
+            <input type="email" id="adminEmail" placeholder="Staff Email" required style="padding:12px; border:1px solid #ddd; border-radius:6px;">
+            <input type="password" id="adminPassword" placeholder="Password" required style="padding:12px; border:1px solid #ddd; border-radius:6px;">
+            <button type="submit" class="apply-btn" style="background:#00a884;">Login</button>
+        </form>
+    </div>
 </div>
 
-<div class="footer-bottom">
-  <p>© 2026Acacia Liquor Store</p>
+<div class="modal" id="invoiceModal">
+    <div class="modal-content" style="max-width: 500px; padding: 30px;">
+        <button class="close-modal" onclick="closeModal('invoiceModal')"><i class="fa fa-times"></i></button>
+        <h3 id="invoiceModalTitle" style="margin-bottom: 20px; text-align: center;">Create Prescription Invoice</h3>
+        <form id="invoiceForm" style="display: grid; gap: 12px;">
+            <input type="hidden" id="invId">
+            <input type="text" id="invCustomer" placeholder="Patient Name" required style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+            <input type="text" id="invProduct" placeholder="Medication Details" required style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+            <select id="invSalesRep" style="padding:10px; border:1px solid #ddd; border-radius:6px;"></select>
+            <input type="number" id="invAmount" placeholder="Amount (KSh)" required style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+            <select id="invStatus" style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending Verification</option>
+            </select>
+            <button type="submit" class="apply-btn" style="background:#00a884;">Save Invoice</button>
+        </form>
+    </div>
 </div>
 
+<div class="modal" id="discountModal">
+    <div class="modal-content" style="max-width: 400px; padding: 30px;">
+        <button class="close-modal" onclick="closeModal('discountModal')"><i class="fa fa-times"></i></button>
+        <h3 style="margin-bottom: 15px; text-align: center;">Set Product Discount</h3>
+        <form id="discountForm" style="display: grid; gap: 12px;">
+            <input type="hidden" id="discProdId">
+            <div id="discProdNameDisplay" style="font-weight: bold; text-align: center; color: #0f2c59; margin-bottom: 5px;"></div>
+            <label style="font-size: 13px; font-weight: bold;">Discount Percentage (%)</label>
+            <input type="number" id="discValue" min="0" max="100" value="0" placeholder="e.g. 15 for 15% off" required style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+            <button type="submit" class="apply-btn" style="background:#00a884;">Apply Discount</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="itemModal">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal('itemModal')"><i class="fa fa-times"></i></button>
+        <div class="modal-gallery">
+            <div class="main-image"><img id="modalMainImage" src=""></div>
+            <div>
+                <h2 id="modalTitle"></h2>
+                <div class="stars" id="modalStars"></div>
+                <div id="modalPriceBox" style="margin: 10px 0;"></div>
+                <div class="item-info" id="modalItemInfo"></div>
+                
+                <form style="display:grid; gap:8px; margin-top:15px;" onsubmit="event.preventDefault(); alert('Pharmacy Consultation Requested!'); closeModal('itemModal');">
+                    <h4 style="font-size:14px;">Consult Pharmacist on This Drug</h4>
+                    <input type="text" placeholder="Patient Name" required style="padding:8px; border:1px solid #ddd; border-radius:4px;">
+                    <input type="email" placeholder="Your Email" required style="padding:8px; border:1px solid #ddd; border-radius:4px;">
+                    <textarea rows="2" placeholder="Ask about dosages, side effects, or drug interactions..." required style="padding:8px; border:1px solid #ddd; border-radius:4px;"></textarea>
+                    
+                    <label style="font-size:12px; font-weight:bold;">Effectiveness Rating:</label>
+                    <select id="userRating" style="padding:6px; border:1px solid #ddd; border-radius:4px;">
+                        <option value="5">5 - Highly Effective</option>
+                        <option value="4">4 - Effective</option>
+                        <option value="3">3 - Moderate</option>
+                    </select>
+
+                    <button type="submit" class="apply-btn" style="margin-top:5px;">Submit Inquiry</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="related-section">
+            <h3><i class="fa fa-capsules"></i> Alternative & Related Medications</h3>
+            <div class="related-grid" id="relatedGrid"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="cartModal">
+    <div class="modal-content" style="max-width: 600px; padding: 25px;">
+        <button class="close-modal" onclick="closeModal('cartModal')"><i class="fa fa-times"></i></button>
+        <h2><i class="fa fa-shopping-basket"></i> Medical Cart & Checkout</h2>
+        
+        <div id="cartItemsList" style="margin:20px 0; max-height:200px; overflow-y:auto;"></div>
+        <div style="font-size:18px; font-weight:bold; text-align:right; margin-bottom:15px;">
+            Total: <span id="cartTotalPrice" style="color:#00a884;">KSh 0</span>
+        </div>
+
+        <h3 style="font-size:15px; margin-bottom:8px;">Select Payment Method:</h3>
+        <div class="payment-methods">
+            <div class="payment-method-card active" id="payMpesa" onclick="selectPayment('mpesa')">
+                <i class="fa fa-mobile-alt fa-2x" style="color:#27ae60;"></i>
+                <div style="font-size:12px; margin-top:5px;">M-Pesa Express</div>
+            </div>
+            <div class="payment-method-card" id="payCard" onclick="selectPayment('card')">
+                <i class="fa fa-credit-card fa-2x" style="color:#2980b9;"></i>
+                <div style="font-size:12px; margin-top:5px;">Credit/Debit Card</div>
+            </div>
+            <div class="payment-method-card" id="payCod" onclick="selectPayment('cod')">
+                <i class="fa fa-hand-holding-medical fa-2x" style="color:#f39c12;"></i>
+                <div style="font-size:12px; margin-top:5px;">Pay on Delivery</div>
+            </div>
+        </div>
+        <form onsubmit="processPayment(event)" style="display:grid; gap:10px;">
+            <div id="mpesaFields">
+                <input type="tel" id="mpesaPhone" placeholder="M-Pesa Phone Number (07XX XXX XXX)" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+            </div>
+            <div id="cardFields" style="display:none; gap:8px;">
+                <input type="text" placeholder="Cardholder Name" style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+                <input type="text" placeholder="Card Number" style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+            </div>
+            <button type="submit" class="apply-btn" style="background:#27ae60; font-size:16px;">Confirm Order</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="addProductModal">
+    <div class="modal-content" style="max-width: 500px; padding: 30px;">
+        <button class="close-modal" onclick="closeModal('addProductModal')"><i class="fa fa-times"></i></button>
+        <h3 style="margin-bottom: 20px; text-align: center;">Add Drug to Inventory</h3>
+        <form id="addProductForm" style="display: grid; gap: 12px;">
+            <input type="text" id="addProdName" placeholder="Drug Name & Strength (e.g. Augmentin 625mg)" required style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+            <select id="addProdCat" style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+                <option value="Prescription">Prescription (Rx)</option>
+                <option value="OTC Medicine">OTC Medicine</option>
+                <option value="Vitamins">Vitamins & Supplements</option>
+                <option value="First Aid">First Aid</option>
+            </select>
+            <input type="number" id="addProdPrice" placeholder="Base Price (KSh)" required style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+            <input type="number" id="addProdDiscount" min="0" max="100" value="0" placeholder="Discount % (Optional)" style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+            <input type="text" id="addProdBrand" placeholder="Manufacturer (e.g. GSK, Pfizer)" style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+            <select id="addProdForm" style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+                <option value="Tablets">Tablets</option>
+                <option value="Capsules">Capsules</option>
+                <option value="Syrup">Syrup</option>
+                <option value="Cream">Cream</option>
+                <option value="Device">Device</option>
+            </select>
+            <select id="addProdRx" style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+                <option value="Rx Required">Prescription Required</option>
+                <option value="OTC">OTC (No Rx)</option>
+            </select>
+            <input type="url" id="addProdImage" placeholder="Image URL" style="padding:10px; border:1px solid #ddd; border-radius:6px;">
+            <button type="submit" class="apply-btn" style="background:#00a884;">Publish to Inventory</button>
+        </form>
+    </div>
+</div>
+
+<div class="floating-social-container">
+  
+    <a href="https://wa.me/254700000000?text=Hello%20Haven%20Fashion,%20I%20have%20an%20inquiry%20about%20a%20clothing%20item." 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       class="floating-btn btn-whatsapp" 
+       title="Chat on WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <a href="https://instagram.com/yourhandle" 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       class="floating-btn btn-instagram" 
+       title="Follow us on Instagram">
+        <i class="fa-brands fa-instagram"></i>
+    </a>
+
+    <a href="https://facebook.com/yourhandle" 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       class="floating-btn btn-facebook" 
+       title="Follow us on Facebook">
+        <i class="fa-brands fa-facebook-f"></i>
+    </a>
+
+    <a href="https://x.com/yourhandle" 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       class="floating-btn btn-x" 
+       title="Follow us on X">
+        <i class="fa-brands fa-x-twitter"></i>
+    </a>
+</div>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4>About Apex Pharmacy</h4>
+            <p>Licensed clinical pharmacy providing genuine pharmaceutical drugs, certified health supplements, emergency medicine, and professional healthcare consultations.</p>
+        </div>
+        <div class="footer-section">
+            <h4>Categories</h4>
+            <ul>
+                <li><a href="#" onclick="showPage('prescription')">Prescription Medicines (Rx)</a></li>
+                <li><a href="#" onclick="showPage('otc')">Over-The-Counter (OTC)</a></li>
+                <li><a href="#" onclick="showPage('supplements')">Vitamins & Wellness</a></li>
+                <li><a href="#" onclick="showPage('firstaid')">First Aid & Diagnostics</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>Pharmacy Helpdesk</h4>
+            <p><i class="fa fa-phone"></i> +254 (0) 700 000 000</p>
+            <p><i class="fa fa-envelope"></i> rx@apexpharmacy.com</p>
+        </div>
+    </div>
+    <div class="footer-bottom">&copy; 2026 Apex Pharmacy & Medical Supplies. All Rights Reserved.</div>
 </footer>
 
 <script>
-const mottos = [
-  "🚚 Fast & Reliable Delivery Across Kenya",
-  "✅ Trusted Quality Medicines & Health Products",
-  "💰 Affordable Prices + Special Discounts Available",
-  "📞 Call / WhatsApp: +254 731 858 997",
-  "💳 Flexible Payment Plans Available (M-PESA, Card, Cash)",
-  "⚡ Order Now – Quick Service & Secure Payments"
-];
-
-let index = 0;
-
-function changeMotto(){
-  document.getElementById("motto").textContent = mottos[index];
-  index = (index + 1) % mottos.length;
-}
-
-setInterval(changeMotto, 2000);
-changeMotto();
-
 const products = [
-{name:"Panadol Extra",category:"Pain Relief",type:"Tablet",price:250,brand:"GSK",availability:"In Stock"},
-{name:"Ibuprofen 400mg",category:"Pain Relief",type:"Tablet",price:300,brand:"Pfizer",availability:"In Stock"},
-
-{name:"Cough Syrup Benylin",category:"Cold & Flu",type:"Syrup",price:450,brand:"Johnson",availability:"In Stock"},
-{name:"Flu Relief Capsules",category:"Cold & Flu",type:"Capsule",price:700,brand:"GSK",availability:"Out of Stock"},
-
-{name:"Vitamin C 1000mg",category:"Vitamins",type:"Tablet",price:600,brand:"NatureMade",availability:"In Stock"},
-{name:"Zinc Supplements",category:"Vitamins",type:"Tablet",price:800,brand:"NatureMade",availability:"In Stock"},
-
-{name:"Dettol Antiseptic",category:"First Aid",type:"Liquid",price:350,brand:"Reckitt",availability:"In Stock"},
-{name:"Bandage Roll",category:"First Aid",type:"Accessory",price:150,brand:"Local",availability:"In Stock"},
-
-{name:"Digital BP Monitor",category:"Devices",type:"Device",price:2500,brand:"Omron",availability:"In Stock"},
-{name:"Thermometer",category:"Devices",type:"Device",price:800,brand:"Omron",availability:"In Stock"},
-
-{name:"Antihistamine Tablets",category:"Allergy",type:"Tablet",price:500,brand:"Pfizer",availability:"In Stock"},
-{name:"Allergy Syrup",category:"Allergy",type:"Syrup",price:650,brand:"GSK",availability:"Out of Stock"},
-
-{name:"Antacid Tablets",category:"Digestive Health",type:"Tablet",price:400,brand:"Bayer",availability:"In Stock"},
-{name:"ORS Sachets",category:"Digestive Health",type:"Powder",price:200,brand:"Local",availability:"In Stock"},
-
-{name:"Acne Cream",category:"Skin Care",type:"Cream",price:900,brand:"Nivea",availability:"In Stock"},
-{name:"Antifungal Cream",category:"Skin Care",type:"Cream",price:750,brand:"GSK",availability:"In Stock"},
-
-{name:"Glucose Meter",category:"Diabetes Care",type:"Device",price:3000,brand:"AccuCheck",availability:"In Stock"},
-{name:"Insulin Syringes",category:"Diabetes Care",type:"Injection",price:1200,brand:"BD",availability:"In Stock"},
-
-{name:"Blood Pressure Tablets",category:"Heart Health",type:"Tablet",price:1500,brand:"Pfizer",availability:"In Stock"},
-{name:"Cholesterol Control Tablets",category:"Heart Health",type:"Tablet",price:1800,brand:"Bayer",availability:"Out of Stock"},
-
-{name:"Eye Drops",category:"Eye Care",type:"Drops",price:500,brand:"Allergan",availability:"In Stock"},
-{name:"Lubricating Eye Gel",category:"Eye Care",type:"Gel",price:950,brand:"Allergan",availability:"In Stock"},
-
-{name:"Baby Syrup",category:"Baby Care",type:"Syrup",price:400,brand:"Johnson",availability:"In Stock"},
-{name:"Baby Lotion",category:"Baby Care",type:"Cream",price:700,brand:"Johnson",availability:"In Stock"}
+    { id: 1, name: "Amoxicillin & Clavulanate 625mg", category: "Prescription", brand: "GSK", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 1200, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
+    { id: 2, name: "Panadol Extra Paracetamol 500mg", category: "OTC Medicine", brand: "GSK", form: "Tablets", rx: "OTC", rating: 5, basePrice: 250, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
+    { id: 3, name: "Seven Seas Cod Liver Oil + Omega 3", category: "Vitamins", brand: "Seven Seas", form: "Capsules", rx: "OTC", rating: 5, basePrice: 2800, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 4, name: "Digital Infrared Blood Pressure Monitor", category: "First Aid", brand: "Bayer", form: "Device", rx: "OTC", rating: 4, basePrice: 4500, discount: 15, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 5, name: "Pfizer Lipitor Atorvastatin 20mg", category: "Prescription", brand: "Pfizer", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 3400, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
+    { id: 6, name: "Hydrocortisone Skin Relief Cream 1%", category: "OTC Medicine", brand: "Novartis", form: "Cream", rx: "OTC", rating: 4, basePrice: 650, discount: 5, inStock: false, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 7, name: "Centrum Multivitamin Adult 100 Tablets", category: "Vitamins", brand: "Pfizer", form: "Tablets", rx: "OTC", rating: 5, basePrice: 2200, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
+    { id: 8, name: "Ibuprofen Pain Relief 400mg", category: "OTC Medicine", brand: "Advil", form: "Capsules", rx: "OTC", rating: 4, basePrice: 350, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
+    { id: 9, name: "Omeprazole Acid Reflux 20mg", category: "Prescription", brand: "AstraZeneca", form: "Capsules", rx: "Rx Required", rating: 4, basePrice: 1500, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
+    { id: 10, name: "Cetirizine Allergy Relief 10mg", category: "OTC Medicine", brand: "GSK", form: "Tablets", rx: "OTC", rating: 5, basePrice: 300, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
+    { id: 11, name: "Metformin Hydrochloride 500mg", category: "Prescription", brand: "Merck", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 850, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
+    { id: 12, name: "Aspirin Low Dose 81mg", category: "OTC Medicine", brand: "Bayer", form: "Tablets", rx: "OTC", rating: 4, basePrice: 400, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
+    { id: 13, name: "Vitamin C 1000mg Effervescent Tablets", category: "Vitamins", brand: "Redoxon", form: "Tablets", rx: "OTC", rating: 5, basePrice: 950, discount: 12, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 14, name: "Digital Clinical Thermometer", category: "First Aid", brand: "Omron", form: "Device", rx: "OTC", rating: 5, basePrice: 1100, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 15, name: "Glucerna Nutritional Powder 850g", category: "Vitamins", brand: "Abbott", form: "Powder", rx: "OTC", rating: 5, basePrice: 4200, discount: 8, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 16, name: "Saline Nasal Spray 50ml", category: "OTC Medicine", brand: "Sterimar", form: "Spray", rx: "OTC", rating: 4, basePrice: 750, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 17, name: "Azithromycin 500mg Tablets", category: "Prescription", brand: "Pfizer", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 1800, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
+    { id: 18, name: "Diclofenac Sodium Gel 1%", category: "OTC Medicine", brand: "Voltaren", form: "Gel", rx: "OTC", rating: 5, basePrice: 900, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 19, name: "Calcium + Vitamin D3 Tablets", category: "Vitamins", brand: "Caltrate", form: "Tablets", rx: "OTC", rating: 4, basePrice: 1600, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
+    { id: 20, name: "First Aid Emergency Trauma Kit", category: "First Aid", brand: "Johnson & Johnson", form: "Kit", rx: "OTC", rating: 5, basePrice: 3500, discount: 20, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 21, name: "Losartan Potassium 50mg", category: "Prescription", brand: "Merck", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 1100, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
+    { id: 22, name: "Cough Syrup Expectorant 100ml", category: "OTC Medicine", brand: "Benylin", form: "Syrup", rx: "OTC", rating: 4, basePrice: 550, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
+    { id: 23, name: "Zinc Gluconate 50mg Tablets", category: "Vitamins", brand: "Nature's Bounty", form: "Tablets", rx: "OTC", rating: 4, basePrice: 800, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 24, name: "Pulse Oximeter Fingertip", category: "First Aid", brand: "Bayer", form: "Device", rx: "OTC", rating: 5, basePrice: 2400, discount: 15, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 25, name: "Amlodipine Besylate 5mg", category: "Prescription", brand: "Pfizer", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 900, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
+    { id: 26, name: "Antacid Chewable Tablets 100s", category: "OTC Medicine", brand: "Tums", form: "Tablets", rx: "OTC", rating: 4, basePrice: 600, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
+    { id: 27, name: "Iron Supplement Ferrous Sulfate", category: "Vitamins", brand: "Nature Made", form: "Tablets", rx: "OTC", rating: 4, basePrice: 700, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
+    { id: 28, name: "Elastic Adhesive Bandage 3 inch", category: "First Aid", brand: "Elastoplast", form: "Bandage", rx: "OTC", rating: 5, basePrice: 250, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 29, name: "Prednisone 5mg Tablets", category: "Prescription", brand: "Novartis", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 600, discount: 0, inStock: false, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
+    { id: 30, name: "Loperamide Anti-Diarrheal Capsules", category: "OTC Medicine", brand: "Imodium", form: "Capsules", rx: "OTC", rating: 5, basePrice: 450, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
+    { id: 31, name: "Magnesium Citrate 500mg", category: "Vitamins", brand: "NOW Foods", form: "Capsules", rx: "OTC", rating: 4, basePrice: 1400, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 32, name: "Medical Face Masks 50pcs Box", category: "First Aid", brand: "3M", form: "Mask", rx: "OTC", rating: 5, basePrice: 500, discount: 25, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 33, name: "Sertraline Hydrochloride 50mg", category: "Prescription", brand: "Pfizer", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 1900, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
+    { id: 34, name: "Throat Lozenges Honey Lemon 24s", category: "OTC Medicine", brand: "Strepsils", form: "Lozenges", rx: "OTC", rating: 5, basePrice: 300, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
+    { id: 35, name: "Vitamin B Complex High Potency", category: "Vitamins", brand: "Nature's Bounty", form: "Tablets", rx: "OTC", rating: 4, basePrice: 1100, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
+    { id: 36, name: "Antiseptic Disinfectant Liquid 500ml", category: "First Aid", brand: "Dettol", form: "Liquid", rx: "OTC", rating: 5, basePrice: 650, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 37, name: "Montelukast Sodium 10mg", category: "Prescription", brand: "Merck", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 2100, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
+    { id: 38, name: "Soothe Eye Drops Lubricant 15ml", category: "OTC Medicine", brand: "Visine", form: "Drops", rx: "OTC", rating: 4, basePrice: 700, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 39, name: "Fish Oil Omega 3 1000mg 120s", category: "Vitamins", brand: "Kirkland Signature", form: "Capsules", rx: "OTC", rating: 5, basePrice: 2400, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 40, name: "Digital Non-Contact Infrared Thermometer", category: "First Aid", brand: "Omron", form: "Device", rx: "OTC", rating: 5, basePrice: 3800, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 41, name: "Escitalopram Oxalate 10mg", category: "Prescription", brand: "Forest Labs", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 1750, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
+    { id: 42, name: "Hydrocortisone Cream Plus 15g", category: "OTC Medicine", brand: "Canesten", form: "Cream", rx: "OTC", rating: 4, basePrice: 550, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 43, name: "Biotin 10000mcg Hair Skin Nails", category: "Vitamins", brand: "Natrol", form: "Tablets", rx: "OTC", rating: 5, basePrice: 2100, discount: 15, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
+    { id: 44, name: "Sterile Gauze Swabs 10cm x 10cm", category: "First Aid", brand: "Smith & Nephew", form: "Bandage", rx: "OTC", rating: 4, basePrice: 300, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 45, name: "Ciprofloxacin 500mg Tablets", category: "Prescription", brand: "Bayer", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 1400, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
+    { id: 46, name: "Vapor Rub Chest Decongestant 50g", category: "OTC Medicine", brand: "Vicks", form: "Ointment", rx: "OTC", rating: 5, basePrice: 480, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 47, name: "CoQ10 100mg Heart Health", category: "Vitamins", brand: "Doctor's Best", form: "Capsules", rx: "OTC", rating: 5, basePrice: 3100, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 48, name: "Neosporin Original First Aid Antibiotic Ointment", category: "First Aid", brand: "Johnson & Johnson", form: "Ointment", rx: "OTC", rating: 5, basePrice: 850, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 49, name: "Pantoprazole Sodium 40mg", category: "Prescription", brand: "Takeda", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 1650, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
+    { id: 50, name: "Clotrimazole Antifungal Cream 1%", category: "OTC Medicine", brand: "Canesten", form: "Cream", rx: "OTC", rating: 5, basePrice: 750, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 51, name: "Glucosamine Chondroitin Joint Support", category: "Vitamins", brand: "Osteo Bi-Flex", form: "Tablets", rx: "OTC", rating: 5, basePrice: 3600, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
+    { id: 52, name: "Medical Paper Tape 1 inch", category: "First Aid", brand: "3M", form: "Tape", rx: "OTC", rating: 4, basePrice: 200, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 53, name: "Levothyroxine Sodium 50mcg", category: "Prescription", brand: "AbbVie", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 950, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
+    { id: 54, name: "Simethicone Gas Relief 80mg", category: "OTC Medicine", brand: "Gas-X", form: "Capsules", rx: "OTC", rating: 4, basePrice: 500, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
+    { id: 55, name: "Melatonin 5mg Sleep Aid", category: "Vitamins", brand: "Nature Made", form: "Tablets", rx: "OTC", rating: 5, basePrice: 1250, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 56, name: "Instant Cold Pack Disposable", category: "First Aid", brand: "Elastoplast", form: "Device", rx: "OTC", rating: 4, basePrice: 350, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 57, name: "Prednisolone Eye Drops 5ml", category: "Prescription", brand: "Allergan", form: "Drops", rx: "Rx Required", rating: 4, basePrice: 1300, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
+    { id: 58, name: "Hydrogen Peroxide Antiseptic 200ml", category: "OTC Medicine", brand: "Cura", form: "Liquid", rx: "OTC", rating: 4, basePrice: 250, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 59, name: "Pregnancy Test Kit One Step", category: "First Aid", brand: "Clearblue", form: "Device", rx: "OTC", rating: 5, basePrice: 900, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 60, name: "Multivitamin Liquid for Children 250ml", category: "Vitamins", brand: "Abbott", form: "Syrup", rx: "OTC", rating: 5, basePrice: 1450, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 61, name: "Rosuvastatin Calcium 10mg", category: "Prescription", brand: "AstraZeneca", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 2600, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
+    { id: 62, name: "Isopropyl Alcohol Rubbing 70% 500ml", category: "OTC Medicine", brand: "Derma", form: "Liquid", rx: "OTC", rating: 5, basePrice: 400, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 63, name: "Collagen Peptides Powder 400g", category: "Vitamins", brand: "Vital Proteins", form: "Powder", rx: "OTC", rating: 5, basePrice: 4500, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 64, name: "Compression Knee Brace Support", category: "First Aid", brand: "Futuro", form: "Device", rx: "OTC", rating: 4, basePrice: 2200, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 65, name: "Gabapentin 300mg Capsules", category: "Prescription", brand: "Pfizer", form: "Capsules", rx: "Rx Required", rating: 4, basePrice: 2000, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
+    { id: 66, name: "Wart Remover Gel 10ml", category: "OTC Medicine", brand: "Compound W", form: "Gel", rx: "OTC", rating: 4, basePrice: 1100, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 67, name: "Probiotics 50 Billion CFU Capsules", category: "Vitamins", brand: "Garden of Life", form: "Capsules", rx: "OTC", rating: 5, basePrice: 3900, discount: 15, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 68, name: "Waterproof Adhesive Plasters Assorted 100s", category: "First Aid", brand: "Elastoplast", form: "Bandage", rx: "OTC", rating: 5, basePrice: 450, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 69, name: "Tramadol Hydrochloride 50mg", category: "Prescription", brand: "Grunenthal", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 1600, discount: 0, inStock: false, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
+    { id: 70, name: "Eczema Relief Soothing Cream 200ml", category: "OTC Medicine", brand: "Cetaphil", form: "Cream", rx: "OTC", rating: 5, basePrice: 1800, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 71, name: "Vitamin D3 5000 IU Softgels", category: "Vitamins", brand: "NOW Foods", form: "Capsules", rx: "OTC", rating: 5, basePrice: 1500, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
+    { id: 72, name: "Digital Blood Glucose Meter Kit", category: "First Aid", brand: "Accu-Chek", form: "Device", rx: "OTC", rating: 5, basePrice: 3200, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 73, name: "Meloxicam 15mg Tablets", category: "Prescription", brand: "Boehringer Ingelheim", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 1150, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
+    { id: 74, name: "Nicotine Replacement Gum 2mg", category: "OTC Medicine", brand: "Nicorette", form: "Gum", rx: "OTC", rating: 4, basePrice: 2500, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
+    { id: 75, name: "Super B-Complex with Vitamin C", category: "Vitamins", brand: "Nature Made", form: "Tablets", rx: "OTC", rating: 4, basePrice: 1350, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 76, name: "Medical Latex Examination Gloves 100s", category: "First Aid", brand: "Ansell", form: "Gloves", rx: "OTC", rating: 5, basePrice: 1200, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 77, name: "Furosemide 40mg Tablets", category: "Prescription", brand: "Sanofi", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 700, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
+    { id: 78, name: "Hemorrhoid Relief Ointment 30g", category: "OTC Medicine", brand: "Preparation H", form: "Ointment", rx: "OTC", rating: 4, basePrice: 950, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 79, name: "Prenatal Multivitamin Softgels", category: "Vitamins", brand: "One A Day", form: "Capsules", rx: "OTC", rating: 5, basePrice: 2900, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
+    { id: 80, name: "Hot Water Bottle Rubber 2L", category: "First Aid", brand: "Cura", form: "Device", rx: "OTC", rating: 4, basePrice: 650, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 81, name: "Spiriva Respimat Inhaler 2.5mcg", category: "Prescription", brand: "Boehringer Ingelheim", form: "Inhaler", rx: "Rx Required", rating: 5, basePrice: 6500, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
+    { id: 82, name: "Ear Wax Removal Drops 15ml", category: "OTC Medicine", brand: "Debrox", form: "Drops", rx: "OTC", rating: 4, basePrice: 800, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 83, name: "L-Carnitine 1000mg Liquid Energy", category: "Vitamins", brand: "Dymatize", form: "Liquid", rx: "OTC", rating: 4, basePrice: 3400, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 84, name: "Cervical Neck Collar Support", category: "First Aid", brand: "Futuro", form: "Device", rx: "OTC", rating: 4, basePrice: 1500, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 85, name: "Valsartan 80mg Tablets", category: "Prescription", brand: "Novartis", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 1700, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
+    { id: 86, name: "Dandruff Medicated Shampoo 200ml", category: "OTC Medicine", brand: "Nizoral", form: "Liquid", rx: "OTC", rating: 5, basePrice: 1400, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 87, name: "Organic Flaxseed Oil 1000mg", category: "Vitamins", brand: "Nature's Bounty", form: "Capsules", rx: "OTC", rating: 4, basePrice: 1900, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 88, name: "Medical Ice Bag Reusable", category: "First Aid", brand: "Elastoplast", form: "Device", rx: "OTC", rating: 5, basePrice: 550, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 89, name: "Allopurinol 100mg Tablets", category: "Prescription", brand: "GSK", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 850, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
+    { id: 90, name: "Motion Sickness Relief Meclizine", category: "OTC Medicine", brand: "Dramamine", form: "Tablets", rx: "OTC", rating: 4, basePrice: 600, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
+    { id: 91, name: "L-Glutamine Powder 500g", category: "Vitamins", brand: "Optimum Nutrition", form: "Powder", rx: "OTC", rating: 5, basePrice: 3800, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 92, name: "Walking Cane Adjustable Aluminum", category: "First Aid", brand: "Nova", form: "Device", rx: "OTC", rating: 4, basePrice: 2500, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 93, name: "Meloxicam 7.5mg Tablets", category: "Prescription", brand: "Boehringer Ingelheim", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 900, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
+    { id: 94, name: "Burn Jel Antiseptic Pain Reliever 3.5g", category: "OTC Medicine", brand: "Water-Jel", form: "Gel", rx: "OTC", rating: 5, basePrice: 200, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 95, name: "Turmeric Curcumin 1500mg with BioPerine", category: "Vitamins", brand: "Cosmo Naturals", form: "Capsules", rx: "OTC", rating: 5, basePrice: 2700, discount: 15, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
+    { id: 96, name: "Digital Body Weight Bathroom Scale", category: "First Aid", brand: "Eatsmart", form: "Device", rx: "OTC", rating: 4, basePrice: 2800, discount: 12, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
+    { id: 97, name: "Spironolactone 25mg Tablets", category: "Prescription", brand: "Pfizer", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 1100, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
+    { id: 98, name: "Lip Balm Medicated SPF 15", category: "OTC Medicine", brand: "Blistex", form: "Ointment", rx: "OTC", rating: 5, basePrice: 250, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
+    { id: 99, name: "Super Vitamin E 400 IU", category: "Vitamins", brand: "Nature's Bounty", form: "Capsules", rx: "OTC", rating: 4, basePrice: 1600, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
+    { id: 100, name: "Nebulizer Compressor Machine Portable", category: "First Aid", brand: "Omron", form: "Device", rx: "OTC", rating: 5, basePrice: 5500, discount: 15, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] }
 ];
 
+const employees = [
+    { name: "Dr. Mary Omondi", email: "mary@apexpharmacy.com", role: "Pharmacist", rate: 4.0 },
+    { name: "John Kamau", email: "john@apexpharmacy.com", role: "Pharmacy Assistant", rate: 2.5 }
+];
 
-let cart = {};
+let invoices = [
+    { id: "RX-5001", customer: "David Njuguna", product: "Amoxicillin 625mg (Rx)", salesRep: "Dr. Mary Omondi", amount: 1200, status: "Paid" },
+    { id: "RX-5002", customer: "Alice Chebet", product: "Atorvastatin 20mg", salesRep: "John Kamau", amount: 3400, status: "Pending Verification" }
+];
 
-function display(list = products){
-const grid = document.getElementById("grid");
-grid.innerHTML = "";
+let cart = [];
+let selectedPaymentMethod = 'mpesa';
 
-list.forEach(p=>{
-grid.innerHTML += `
-<div class="card">
+function getEffectivePrice(item) {
+    return Math.round(item.basePrice * (1 - (item.discount || 0) / 100));
+}
 
-<img src="${p.image}" alt="${p.name}"
-onclick="viewProduct('${p.name}')"
-style="width:100%; height:180px; object-fit:cover; border-radius:10px; cursor:pointer;">
+function renderProducts(list){
+    const grid = document.getElementById("itemGrid");
+    if(!grid) return;
+    grid.innerHTML = "";
+    if(list.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align:center; color:#888;">No pharmaceutical products match your filter parameters.</div>`;
+        return;
+    }
+    list.forEach((item) => {
+        const isRx = item.rx === "Rx Required";
+        const effPrice = getEffectivePrice(item);
+        const hasDiscount = item.discount > 0;
 
-<h3>${p.name}</h3>
-<p>KES ${p.price}</p>
-<p>${p.category} | ${p.size}</p>
+        grid.innerHTML += `
+        <div class="item-card">
+            ${hasDiscount ? `<div class="sale-badge">-${item.discount}% OFF</div>` : ''}
+            <img src="${item.images[0]}" class="item-image">
+            <div class="card-body">
+                <div class="item-title">${item.name}</div>
+                <div class="stars">${'★'.repeat(item.rating)}${'☆'.repeat(5 - item.rating)}</div>
+                <div style="margin-bottom:10px;">
+                    <span style="font-size:18px; font-weight:bold; color:#00a884;">KSh ${effPrice.toLocaleString()}</span>
+                    ${hasDiscount ? `<span style="font-size:13px; color:#888; text-decoration:line-through; margin-left:8px;">KSh ${item.basePrice.toLocaleString()}</span>` : ''}
+                </div>
+                <div class="item-info">
+                    <div><i class="fa fa-folder"></i> ${item.category}</div>
+                    <div><i class="fa fa-industry"></i> ${item.brand}</div>
+                    <div><i class="fa fa-pills"></i> ${item.form}</div>
+                    <div><span class="rx-badge ${isRx ? 'rx-required' : 'rx-otc'}">${item.rx}</span></div>
+                </div>
+                <div class="card-buttons">
+                    <button class="add-cart-btn" onclick="addToCart(${item.id})"><i class="fa fa-cart-plus"></i> Cart</button>
+                    <button class="inquiry-btn" onclick="openModal(${item.id})">Consult</button>
+                    <button class="view-btn" onclick="openModal(${item.id})">Details</button>
+                </div>
+            </div>
+        </div>`;
+    });
+}
 
-<p class="${p.stock > 0 ? 'instock' : 'outstock'}">
-${p.stock > 0 ? 'Available' : 'Out of stock'}
-</p>
+function showPage(page, navElement) {
+    if(navElement) {
+        document.querySelectorAll('.nav a').forEach(el => el.classList.remove('active-nav'));
+        navElement.classList.add('active-nav');
+    }
 
-<div class="top-icons">
+    const catalogSec = document.getElementById("catalogSection");
+    const topSearchSec = document.getElementById("topSearchSection");
+    const filterSidebar = document.getElementById("mainFilterSidebar");
+    const deliverySec = document.getElementById("deliverySection");
+    const contactSec = document.getElementById("contactSection");
+    const pageTitle = document.getElementById("pageSectionTitle");
 
-  <button onclick="add('${p.name}')" class="icon-btn">🛒</button>
+    catalogSec.style.display = "none";
+    topSearchSec.style.display = "none";
+    filterSidebar.style.display = "none";
+    deliverySec.style.display = "none";
+    contactSec.style.display = "none";
 
-  <button onclick="toggleLove('${p.name}')" class="icon-btn heart">
-    ${likes[p.name] ? "❤️" : "🤍"}
-  </button>
+    if (page === 'storefront') {
+        catalogSec.style.display = "block";
+        topSearchSec.style.display = "flex";
+        filterSidebar.style.display = "block";
+        pageTitle.innerText = "Verified Pharmaceutical Products";
+        renderProducts(products);
+    } else if (page === 'prescription') {
+        catalogSec.style.display = "block";
+        topSearchSec.style.display = "flex";
+        filterSidebar.style.display = "block";
+        pageTitle.innerText = "Prescription Drugs (Doctor Note Required)";
+        renderProducts(products.filter(p => p.category === "Prescription"));
+    } else if (page === 'otc') {
+        catalogSec.style.display = "block";
+        topSearchSec.style.display = "flex";
+        filterSidebar.style.display = "block";
+        pageTitle.innerText = "Over-The-Counter (OTC) Medicines";
+        renderProducts(products.filter(p => p.category === "OTC Medicine"));
+    } else if (page === 'supplements') {
+        catalogSec.style.display = "block";
+        topSearchSec.style.display = "flex";
+        filterSidebar.style.display = "block";
+        pageTitle.innerText = "Vitamins & Nutritional Supplements";
+        renderProducts(products.filter(p => p.category === "Vitamins"));
+    } else if (page === 'firstaid') {
+        catalogSec.style.display = "block";
+        topSearchSec.style.display = "flex";
+        filterSidebar.style.display = "block";
+        pageTitle.innerText = "First Aid & Medical Equipment";
+        renderProducts(products.filter(p => p.category === "First Aid"));
+    } else if (page === 'delivery') {
+        deliverySec.style.display = "block";
+    } else if (page === 'contact') {
+        contactSec.style.display = "block";
+    }
+}
 
- <a href="https://wa.me/254731858997" target="_blank" style="color:#25D366;">
-    <i class="fab fa-whatsapp"></i>
-  </a>
-  
-  <a href="https://instagram.com" target="_blank" style="color:#E4405F;">
-    <i class="fab fa-instagram"></i>
-  </a>
+function openModal(id){
+    const item = products.find(p => p.id === id);
+    document.getElementById("itemModal").style.display = "flex";
+    document.getElementById("modalMainImage").src = item.images[0];
+    document.getElementById("modalTitle").innerText = item.name;
+    document.getElementById("modalStars").innerText = '★'.repeat(item.rating) + '☆'.repeat(5 - item.rating);
+    
+    const effPrice = getEffectivePrice(item);
+    const hasDiscount = item.discount > 0;
+    document.getElementById("modalPriceBox").innerHTML = `
+        <span style="font-size:22px; font-weight:bold; color: #00a884;">KSh ${effPrice.toLocaleString()}</span>
+        ${hasDiscount ? `<span style="font-size:14px; color:#888; text-decoration:line-through; margin-left:10px;">KSh ${item.basePrice.toLocaleString()} (-${item.discount}%)</span>` : ''}
+    `;
 
-</div>
+    document.getElementById("modalItemInfo").innerHTML = `
+        <div>Category: <b>${item.category}</b></div>
+        <div>Brand: <b>${item.brand}</b></div>
+        <div>Form: <b>${item.form}</b></div>
+        <div>Requirement: <b>${item.rx}</b></div>`;
 
-</div>
-`;
+    const related = products.filter(p => p.category === item.category && p.id !== item.id);
+    const relatedGrid = document.getElementById("relatedGrid");
+    relatedGrid.innerHTML = "";
+    if(related.length === 0) {
+        relatedGrid.innerHTML = "<p style='font-size:13px; color:#777;'>No direct alternatives found in this category.</p>";
+    } else {
+        related.forEach(rel => {
+            const relEff = getEffectivePrice(rel);
+            relatedGrid.innerHTML += `
+            <div class="related-card" onclick="openModal(${rel.id})">
+                <img src="${rel.images[0]}">
+                <div style="font-size:12px; font-weight:bold; margin-top:5px;">${rel.name}</div>
+                <div style="font-size:12px; color:#00a884;">KSh ${relEff.toLocaleString()}</div>
+            </div>`;
+        });
+    }
+}
+
+function closeModal(id){ document.getElementById(id).style.display = "none"; }
+
+/* Cart & Checkout */
+function addToCart(id) {
+    const item = products.find(p => p.id === id);
+    const existing = cart.find(c => c.id === id);
+    if(existing) { existing.qty += 1; }
+    else { cart.push({ ...item, qty: 1 }); }
+    updateCartUI();
+    alert(`${item.name} added to cart!`);
+}
+
+function updateCartUI() {
+    document.getElementById("cartCount").innerText = cart.reduce((sum, item) => sum + item.qty, 0);
+    const cartList = document.getElementById("cartItemsList");
+    cartList.innerHTML = "";
+    let total = 0;
+    cart.forEach((item, idx) => {
+        const effPrice = getEffectivePrice(item);
+        const itemTotal = effPrice * item.qty;
+        total += itemTotal;
+        cartList.innerHTML += `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee;">
+            <div>
+                <b>${item.name}</b><br>
+                <small>KSh ${effPrice.toLocaleString()} x ${item.qty}</small>
+            </div>
+            <div>
+                <b>KSh ${itemTotal.toLocaleString()}</b>
+                <button onclick="removeFromCart(${idx})" style="background:none; border:none; color:red; margin-left:8px; cursor:pointer;"><i class="fa fa-trash"></i></button>
+            </div>
+        </div>`;
+    });
+    document.getElementById("cartTotalPrice").innerText = `KSh ${total.toLocaleString()}`;
+}
+
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCartUI();
+}
+
+function openCartModal() {
+    updateCartUI();
+    document.getElementById("cartModal").style.display = "flex";
+}
+
+function selectPayment(method) {
+    selectedPaymentMethod = method;
+    document.querySelectorAll('.payment-method-card').forEach(el => el.classList.remove('active'));
+    if(method === 'mpesa') {
+        document.getElementById('payMpesa').classList.add('active');
+        document.getElementById('mpesaFields').style.display = 'block';
+        document.getElementById('cardFields').style.display = 'none';
+    } else if(method === 'card') {
+        document.getElementById('payCard').classList.add('active');
+        document.getElementById('mpesaFields').style.display = 'none';
+        document.getElementById('cardFields').style.display = 'grid';
+    } else {
+        document.getElementById('payCod').classList.add('active');
+        document.getElementById('mpesaFields').style.display = 'none';
+        document.getElementById('cardFields').style.display = 'none';
+    }
+}
+
+function processPayment(e) {
+    e.preventDefault();
+    if(cart.length === 0) { alert("Your medical cart is empty!"); return; }
+    if(selectedPaymentMethod === 'mpesa') {
+        alert("M-Pesa payment prompt sent to mobile phone. Please enter PIN to complete payment.");
+    } else {
+        alert("Order successfully placed! A pharmacist will process your delivery.");
+    }
+    cart = [];
+    updateCartUI();
+    closeModal("cartModal");
+}
+
+/* Admin Logic */
+document.getElementById("mainLogo").addEventListener("click", () => {
+    document.getElementById("adminLoginModal").style.display = "flex";
 });
-}
-let likes = {};
 
-function toggleLove(name){
-  if(likes[name]){
-    delete likes[name];
-  } else {
-    likes[name] = true;
-  }
-  display(products);
-}
+document.getElementById("adminLoginForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = document.getElementById("adminEmail").value;
+    const pwd = document.getElementById("adminPassword").value;
 
-function viewProduct(name){
-  const p = products.find(x => x.name === name);
-  if(!p) return;
+    if(email === "adminacaciabooks@gmail.com" && pwd === "admin123") {
+        closeModal("adminLoginModal");
+        activateAdminDashboard();
+    } else { 
+        alert("Invalid credentials. Access denied."); 
+    }
+});
 
-  document.getElementById("viewImg").src = p.image;
-  document.getElementById("viewName").textContent = p.name;
-  document.getElementById("viewPrice").textContent = "KES " + p.price;
-  document.getElementById("viewCategory").textContent = p.category + " | " + (p.size || "");
-
-  document.getElementById("viewABV").textContent = "ABV: " + (p.abv || "N/A");
-  document.getElementById("viewCountry").textContent = "Country: " + (p.country || "N/A");
-  document.getElementById("viewBrand").textContent = "Brand: " + (p.brand || "N/A");
-  document.getElementById("viewStock").textContent = "Availability: " + (p.stock || "In Stock");
-  document.getElementById("viewDesc").textContent = p.description || "";
-
-  document.getElementById("viewModal").style.display = "block";
+function activateAdminDashboard() {
+    document.getElementById("publicContainer").style.display = "none";
+    document.getElementById("adminContainer").style.display = "flex";
+    document.getElementById("mainNavbar").innerHTML = `
+        <span style="color:#00a884; font-weight:bold;"><i class="fa fa-user-md"></i> Pharmacist Portal</span>
+        <a href="#" onclick="location.reload()" style="background:#00a884; padding:6px 12px; border-radius:4px; margin-left:10px;"><i class="fa fa-sign-out-alt"></i> Logout</a>`;
+    renderAdminTables();
 }
 
-function closeView(){
-document.getElementById("viewModal").style.display = "none";
+function switchAdminTab(tab) {
+    document.querySelectorAll('.admin-panel-card').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.admin-sidebar-menu li').forEach(el => el.classList.remove('active-admin-tab'));
+    document.getElementById(`panel-${tab}`).style.display = 'block';
+    event.currentTarget.classList.add('active-admin-tab');
 }
 
-function applyFilters() {
-  const search = document.getElementById("search").value.toLowerCase();
+function renderAdminTables() {
+    // Render Invoices Table
+    const invTable = document.getElementById("adminInvoiceTableBody");
+    invTable.innerHTML = "";
+    let grossSales = 0;
 
-  const checked = [...document.querySelectorAll("input[type=checkbox]:checked")];
-
-  const category = checked
-    .filter(c => !c.dataset.type)
-    .map(c => c.value);
-
-  const type = checked
-    .filter(c => c.dataset.type === "type")
-    .map(c => c.value);
-
-  const price = checked
-    .filter(c => c.dataset.type === "price")
-    .map(c => c.value);
-
-  const brand = checked
-    .filter(c => c.dataset.type === "brand")
-    .map(c => c.value);
-
-  const availability = checked
-    .filter(c => c.dataset.type === "availability")
-    .map(c => c.value);
-
-  const filtered = products.filter(p => {
-
-    const matchSearch = p.name.toLowerCase().includes(search);
-
-    const matchCategory = !category.length || category.includes(p.category);
-
-    const matchType = !type.length || type.includes(p.type);
-
-    const matchBrand = !brand.length || brand.includes(p.brand);
-
-    const matchAvailability = !availability.length || availability.includes(p.availability);
-
-    const matchPrice = !price.length || price.some(r => {
-      if (r === "under500") return p.price < 500;
-      if (r === "500-1500") return p.price >= 500 && p.price <= 1500;
-      if (r === "1500-3000") return p.price > 1500 && p.price <= 3000;
-      if (r === "3000plus") return p.price > 3000;
+    invoices.forEach(inv => {
+        if(inv.status === "Paid") grossSales += inv.amount;
+        invTable.innerHTML += `
+        <tr>
+            <td><b>${inv.id}</b></td>
+            <td>${inv.customer}</td>
+            <td>${inv.product}</td>
+            <td>${inv.salesRep}</td>
+            <td>KSh ${inv.amount.toLocaleString()}</td>
+            <td><span class="status-badge ${inv.status === 'Paid' ? 'status-success' : 'status-pending'}">${inv.status}</span></td>
+            <td>
+                <button class="action-btn btn-edit" onclick="editInvoice('${inv.id}')"><i class="fa fa-edit"></i> Edit</button>
+                <button class="action-btn btn-delete" onclick="deleteInvoice('${inv.id}')"><i class="fa fa-trash"></i> Delete</button>
+            </td>
+        </tr>`;
     });
 
-    return (
-      matchSearch &&
-      matchCategory &&
-      matchType &&
-      matchPrice &&
-      matchBrand &&
-      matchAvailability
-    );
-  });
+    document.getElementById("revenueGrossSales").innerText = "KSh " + grossSales.toLocaleString();
 
-  display(filtered);
-}
-function clearFilters(){
-document.querySelectorAll("input[type=checkbox]").forEach(c=>c.checked=false);
-document.getElementById("search").value = "";
-display(products);
-}
+    // Render Products Table
+    const prodTable = document.getElementById("adminProductsTableBody");
+    prodTable.innerHTML = "";
+    products.forEach(p => {
+        const eff = getEffectivePrice(p);
+        prodTable.innerHTML += `
+        <tr>
+            <td><b>${p.name}</b></td>
+            <td>${p.category}</td>
+            <td>KSh ${p.basePrice.toLocaleString()}</td>
+            <td><span style="color: ${p.discount > 0 ? '#e74c3c':'#333'}; font-weight: bold;">${p.discount}%</span></td>
+            <td><b style="color:#00a884;">KSh ${eff.toLocaleString()}</b></td>
+            <td><span class="status-badge ${p.inStock ? 'status-success':'status-pending'}">${p.inStock ? 'In Stock':'Out'}</span></td>
+            <td>
+                <button class="action-btn btn-edit" onclick="openDiscountModal(${p.id})"><i class="fa fa-percent"></i> Discount</button>
+            </td>
+        </tr>`;
+    });
 
-function add(name){
-const p = products.find(x => x.name === name);
-if(!p) return;
+    // Render Employees and Commissions Table
+    const empTable = document.getElementById("adminEmployeesTableBody");
+    const commTable = document.getElementById("adminCommissionTableBody");
+    empTable.innerHTML = ""; commTable.innerHTML = "";
+    let totalComm = 0;
+    
+    employees.forEach(e => {
+        const salesVolume = invoices
+            .filter(i => i.salesRep === e.name && i.status === "Paid")
+            .reduce((sum, i) => sum + i.amount, 0);
+        const commissionEarned = (salesVolume * e.rate) / 100;
+        totalComm += commissionEarned;
 
-if(p.stock <= 0){
-alert("Out of stock");
-return;
-}
+        empTable.innerHTML += `<tr><td><b>${e.name}</b></td><td>${e.role}</td><td>${e.rate}%</td></tr>`;
+        commTable.innerHTML += `<tr><td><b>${e.name}</b></td><td>${e.role}</td><td>KSh ${salesVolume.toLocaleString()}</td><td>${e.rate}%</td><td style="color:#137333; font-weight:bold;">KSh ${commissionEarned.toLocaleString()}</td></tr>`;
+    });
 
-if(!cart[name]){
-cart[name] = {qty:1, price:p.price};
-}else{
-cart[name].qty++;
-}
-
-p.stock--;
-display(products);
-}
-
-function showCart(){
-const list = document.getElementById("cartList");
-list.innerHTML = "";
-let total = 0;
-
-for(const [name,item] of Object.entries(cart)){
-const sub = item.qty * item.price;
-total += sub;
-list.innerHTML += `<li>${name} x${item.qty} = KES ${sub}</li>`;
+    document.getElementById("revenueCommissionsPaid").innerText = "KSh " + totalComm.toLocaleString();
 }
 
-document.getElementById("total").textContent = total;
-document.getElementById("cartModal").style.display = "block";
+/* Discount Manager */
+function openDiscountModal(id) {
+    const item = products.find(p => p.id === id);
+    document.getElementById("discProdId").value = item.id;
+    document.getElementById("discProdNameDisplay").innerText = item.name;
+    document.getElementById("discValue").value = item.discount;
+    document.getElementById("discountModal").style.display = "flex";
 }
 
-function closeCart(){
-document.getElementById("cartModal").style.display = "none";
+document.getElementById("discountForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const id = parseInt(document.getElementById("discProdId").value);
+    const newDisc = parseFloat(document.getElementById("discValue").value);
+
+    const item = products.find(p => p.id === id);
+    if(item) {
+        item.discount = newDisc;
+    }
+
+    renderAdminTables();
+    renderProducts(products);
+    closeModal("discountModal");
+    alert("Discount updated successfully!");
+});
+
+/* Invoice Operations */
+function openInvoiceModal(invId = null) {
+    const repSelect = document.getElementById("invSalesRep");
+    repSelect.innerHTML = employees.map(e => `<option value="${e.name}">${e.name}</option>`).join("");
+
+    if(invId) {
+        const inv = invoices.find(i => i.id === invId);
+        document.getElementById("invoiceModalTitle").innerText = "Edit Rx Invoice (" + inv.id + ")";
+        document.getElementById("invId").value = inv.id;
+        document.getElementById("invCustomer").value = inv.customer;
+        document.getElementById("invProduct").value = inv.product;
+        document.getElementById("invSalesRep").value = inv.salesRep;
+        document.getElementById("invAmount").value = inv.amount;
+        document.getElementById("invStatus").value = inv.status;
+    } else {
+        document.getElementById("invoiceModalTitle").innerText = "Create Rx Invoice";
+        document.getElementById("invoiceForm").reset();
+        document.getElementById("invId").value = "";
+    }
+    document.getElementById("invoiceModal").style.display = "flex";
 }
 
-function checkout(){
-let msg = "🛒 Liquor Order:%0A%0A";
-let total = 0;
+function editInvoice(id) { openInvoiceModal(id); }
 
-for(const [name,item] of Object.entries(cart)){
-const sub = item.qty * item.price;
-msg += `${name} x${item.qty} = KES ${sub}%0A`;
-total += sub;
+function deleteInvoice(id) {
+    if(confirm(`Delete invoice ${id}?`)) {
+        invoices = invoices.filter(i => i.id !== id);
+        renderAdminTables();
+    }
 }
 
-msg += `%0A💰 Total: KES ${total}`;
+document.getElementById("invoiceForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const id = document.getElementById("invId").value;
+    const customer = document.getElementById("invCustomer").value;
+    const product = document.getElementById("invProduct").value;
+    const salesRep = document.getElementById("invSalesRep").value;
+    const amount = parseFloat(document.getElementById("invAmount").value);
+    const status = document.getElementById("invStatus").value;
 
-window.open(`https://wa.me/254731858997?text=${msg}`, "_blank");
+    if(id) {
+        const index = invoices.findIndex(i => i.id === id);
+        if(index !== -1) { invoices[index] = { id, customer, product, salesRep, amount, status }; }
+    } else {
+        const newId = `RX-${5000 + invoices.length + 1}`;
+        invoices.push({ id: newId, customer, product, salesRep, amount, status });
+    }
+
+    renderAdminTables();
+    closeModal("invoiceModal");
+});
+
+/* Product Operations */
+function openAddProductModal(){ document.getElementById("addProductModal").style.display = "flex"; }
+
+document.getElementById("addProductForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = document.getElementById("addProdName").value;
+    const cat = document.getElementById("addProdCat").value;
+    const basePrice = parseFloat(document.getElementById("addProdPrice").value);
+    const discount = parseFloat(document.getElementById("addProdDiscount").value) || 0;
+    const brand = document.getElementById("addProdBrand").value || "Generic";
+    const form = document.getElementById("addProdForm").value;
+    const rx = document.getElementById("addProdRx").value;
+    const img = document.getElementById("addProdImage").value || "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000";
+
+    const newId = products.length + 1;
+    products.push({ id: newId, name, category: cat, brand, form, rx, rating: 5, basePrice, discount, inStock: true, images: [img] });
+    renderProducts(products);
+    renderAdminTables();
+    closeModal("addProductModal");
+});
+
+/* Filters */
+function applyFilters() {
+    const kw = document.getElementById("filterKeyword").value.toLowerCase();
+    const cat = document.getElementById("filterCategory").value;
+    const minPrice = parseFloat(document.getElementById("filterMinPrice").value) || 0;
+    const maxPrice = parseFloat(document.getElementById("filterMaxPrice").value) || Infinity;
+    const brand = document.getElementById("filterBrand").value;
+    const form = document.getElementById("filterForm").value;
+    const rxType = document.getElementById("filterRxType").value;
+    const inStockOnly = document.getElementById("filterInStockOnly").checked;
+
+    const filtered = products.filter(p => {
+        const eff = getEffectivePrice(p);
+        const matchesKw = p.name.toLowerCase().includes(kw);
+        const matchesCat = cat === "All" || p.category === cat;
+        const matchesPrice = eff >= minPrice && eff <= maxPrice;
+        const matchesBrand = brand === "All" || p.brand === brand;
+        const matchesForm = form === "All" || p.form === form;
+        const matchesRx = rxType === "All" || p.rx === rxType;
+        const matchesStock = !inStockOnly || p.inStock;
+
+        return matchesKw && matchesCat && matchesPrice && matchesBrand && matchesForm && matchesRx && matchesStock;
+    });
+
+    renderProducts(filtered);
 }
 
-function toggleTheme(){
-document.body.classList.toggle("dark");
+function resetFilters() {
+    document.getElementById("filterKeyword").value = "";
+    document.getElementById("filterCategory").value = "All";
+    document.getElementById("filterMinPrice").value = "";
+    document.getElementById("filterMaxPrice").value = "";
+    document.getElementById("filterBrand").value = "All";
+    document.getElementById("filterForm").value = "All";
+    document.getElementById("filterRxType").value = "All";
+    document.getElementById("filterInStockOnly").checked = false;
+    renderProducts(products);
 }
 
-display(products);
+function topSearch() {
+    const val = document.getElementById("topSearchBar").value.toLowerCase();
+    const filtered = products.filter(p => p.name.toLowerCase().includes(val));
+    renderProducts(filtered);
+}
+
+renderProducts(products);
 </script>
-
 </body>
 </html>
