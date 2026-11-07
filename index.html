@@ -7,557 +7,7 @@
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family: 'Cambria', sans-serif;
-}
-
-body{
-    background:#f4f7f6;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-.topbar{
-    background:#0f2c59;
-    color:#fff;
-    padding:15px 40px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.logo{
-    font-size:24px;
-    font-weight:bold;
-    cursor: pointer;
-    user-select: none;
-    color: #00a884;
-}
-
-.logo span {
-    color: #fff;
-}
-
-.nav{
-    display:flex;
-    gap:15px;
-    align-items: center;
-}
-
-.nav a{
-    color:#fff;
-    text-decoration:none;
-    font-size:14px;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    transition:0.3s;
-    padding: 6px 12px;
-    border-radius: 4px;
-}
-
-.nav a:hover, .nav a.active-nav{
-    color:#fff;
-    background: #00a884;
-}
-
-.cart-icon-btn {
-    background: #00a884;
-    color: #fff;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.container{
-    display:flex;
-    gap:25px;
-    padding:30px;
-    flex: 1;
-}
-
-.sidebar{
-    width:280px;
-    background:#fff;
-    padding:20px;
-    border-radius:10px;
-    height:fit-content;
-    box-shadow:0 2px 10px rgba(0,0,0,0.08);
-}
-
-.sidebar h3{
-    margin-bottom:15px;
-    color: #0f2c59;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 8px;
-}
-
-.filter-group{
-    margin-bottom:15px;
-}
-
-.filter-group label{
-    display:block;
-    margin-bottom:6px;
-    font-size:13px;
-    font-weight: bold;
-    color: #444;
-}
-
-.filter-group input,
-.filter-group select{
-    width:100%;
-    padding:10px;
-    border:1px solid #ddd;
-    border-radius:6px;
-    font-size: 13px;
-}
-
-.price-inputs {
-    display: flex;
-    gap: 8px;
-}
-
-.apply-btn, .clear-btn{
-    width:100%;
-    background:#0f2c59;
-    color:#fff;
-    border:none;
-    padding:12px;
-    border-radius:6px;
-    cursor:pointer;
-    font-weight:bold;
-    margin-bottom: 8px;
-    transition: 0.3s;
-}
-
-.clear-btn { background: #666; }
-.apply-btn:hover{ background:#00a884; }
-.clear-btn:hover{ background:#444; }
-
-.content{ flex:1; }
-
-.search-bar{
-    background:#fff;
-    padding:18px;
-    border-radius:10px;
-    display:flex;
-    gap:15px;
-    margin-bottom:25px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.08);
-}
-
-.search-bar input{
-    flex:1;
-    padding:12px;
-    border:1px solid #ddd;
-    border-radius:6px;
-}
-
-.search-btn{
-    background:#00a884;
-    color:#fff;
-    border:none;
-    padding:12px 25px;
-    border-radius:6px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.item-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
-    gap:20px;
-}
-
-.item-card{
-    background:#fff;
-    border-radius:10px;
-    overflow:hidden;
-    box-shadow:0 2px 12px rgba(0,0,0,0.08);
-    transition:0.3s;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-}
-
-.item-card:hover{ transform:translateY(-5px); }
-
-.item-image{
-    width:100%;
-    height:220px;
-    object-fit:cover;
-}
-
-.sale-badge {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    background: #e74c3c;
-    color: #fff;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: bold;
-    z-index: 5;
-}
-
-.card-body{
-    padding:18px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
-.item-title{
-    font-size:16px;
-    font-weight:bold;
-    margin-bottom:6px;
-    color: #111;
-}
-
-.stars {
-    color: #f39c12;
-    font-size: 13px;
-    margin-bottom: 8px;
-}
-
-.item-info{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-    font-size:12px;
-    color:#666;
-    margin-bottom:15px;
-    background: #fdfdfd;
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #f0f0f0;
-}
-
-.rx-badge {
-    display: inline-block;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: bold;
-}
-.rx-required { background: #fadbd8; color: #78281f; }
-.rx-otc { background: #d4efdf; color: #145a32; }
-
-.card-buttons{
-    display:grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap:6px;
-    margin-top: auto;
-}
-
-.inquiry-btn, .view-btn, .add-cart-btn{
-    border:none;
-    padding:9px 5px;
-    border-radius:6px;
-    cursor:pointer;
-    font-weight:bold;
-    font-size: 12px;
-    text-align: center;
-}
-
-.add-cart-btn { background: #27ae60; color: #fff; }
-.inquiry-btn{ background:#0f2c59; color:#fff; }
-.view-btn{ background:#00a884; color:#fff; }
-
-.inquiry-btn:hover, .view-btn:hover, .add-cart-btn:hover{ opacity:0.9; }
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.8);
-    display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:999;
-    padding:20px;
-}
-
-.modal-content{
-    background:#fff;
-    width:100%;
-    max-width:850px;
-    border-radius:10px;
-    overflow:hidden;
-    position:relative;
-    max-height:95vh;
-    overflow-y:auto;
-}
-
-.close-modal{
-    position:absolute;
-    top:15px;
-    right:15px;
-    width:35px;
-    height:35px;
-    border:none;
-    border-radius:50%;
-    background:#0f2c59;
-    color:#fff;
-    cursor:pointer;
-    z-index:10;
-}
-
-.modal-gallery{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-    padding:20px;
-}
-
-.main-image img{
-    width:100%;
-    height:300px;
-    object-fit:cover;
-    border-radius:10px;
-}
-
-.related-section {
-    padding: 20px;
-    background: #f9f9f9;
-    border-top: 1px solid #eee;
-}
-
-.related-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    margin-top: 10px;
-}
-
-.related-card {
-    background: #fff;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    text-align: center;
-    cursor: pointer;
-}
-
-.related-card img {
-    width: 100%;
-    height: 110px;
-    object-fit: cover;
-    border-radius: 6px;
-}
-
-.payment-methods {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin: 15px 0;
-}
-
-.payment-method-card {
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    padding: 12px;
-    text-align: center;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.payment-method-card.active {
-    border-color: #00a884;
-    background: #e6f8f3;
-}
-
-.admin-sidebar-menu {
-    list-style: none;
-    margin-top: 10px;
-}
-
-.admin-sidebar-menu li {
-    padding: 12px 15px;
-    margin-bottom: 8px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    color: #333;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: 0.2s;
-}
-
-.admin-sidebar-menu li:hover, .admin-sidebar-menu li.active-admin-tab {
-    background: #00a884;
-    color: #fff;
-}
-
-.admin-panel-card {
-    background: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    min-height: 400px;
-}
-
-.admin-panel-card h2 {
-    margin-bottom: 20px;
-    border-bottom: 2px solid #efefef;
-    padding-bottom: 10px;
-    color: #111;
-}
-
-.admin-data-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-.admin-data-table th, .admin-data-table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-}
-
-.admin-data-table th {
-    background: #f9f9f9;
-    font-weight: bold;
-}
-
-.status-badge {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.status-success { background: #e6f4ea; color: #137333; }
-.status-pending { background: #ffeec2; color: #b06000; }
-
-.action-btn {
-    border: none;
-    padding: 6px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: bold;
-    margin-right: 4px;
-}
-.btn-edit { background: #2980b9; color: #fff; }
-.btn-delete { background: #c0392b; color: #fff; }
-
-.page-section {
-    background: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    margin-bottom: 20px;
-}
-
-.floating-social-container {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    z-index: 1000;
-}
-
-.floating-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    font-size: 22px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    text-decoration: none;
-}
-
-.floating-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35);
-}
-
-.btn-whatsapp {
-    background-color: #25d366;
-}
-
-.btn-instagram {
-    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
-}
-
-.btn-facebook {
-    background-color: #1877f2;
-}
-
-.btn-x {
-    background-color: #000000;
-}
-
-footer {
-    background: #0f2c59;
-    color: #fff;
-    margin-top: auto;
-    padding: 40px 40px 20px 40px;
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.footer-section h4 {
-    font-size: 16px;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    color: #00a884;
-}
-
-.footer-section p, .footer-section ul li a {
-    font-size: 14px;
-    color: #bbb;
-    text-decoration: none;
-    line-height: 1.6;
-}
-
-.footer-section ul { list-style: none; }
-
-.footer-bottom {
-    text-align: center;
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 1px solid #1a3f7a;
-    font-size: 13px;
-    color: #888;
-}
-
-@media(max-width:900px){
-    .container{ flex-direction:column; }
-    .sidebar{ width:100%; }
-    .search-bar{ flex-direction:column; }
-    .modal-gallery{ grid-template-columns:1fr; }
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -710,6 +160,11 @@ footer {
             <li onclick="switchAdminTab('commission')"><i class="fa fa-percentage"></i> Staff Commission</li>
             <li onclick="switchAdminTab('products')"><i class="fa fa-boxes-stacked"></i> Drug Inventory & Discounts</li>
             <li onclick="switchAdminTab('settings')"><i class="fa fa-sliders-h"></i> Settings</li>
+            <li onclick="switchAdminTab('clinicDashboard')"><i class="fa fa-table-columns"></i> Dashboard</li>
+            <li onclick="switchAdminTab('clinicVisits')"><i class="fa fa-stethoscope"></i> Patient Visits</li>
+            <li onclick="switchAdminTab('clinicPharmacy')"><i class="fa fa-pills"></i> Pharmacy &amp; Sales</li>
+            <li onclick="switchAdminTab('clinicHistory')"><i class="fa fa-clock-rotate-left"></i> System History Log</li>
+            <li onclick="switchAdminTab('appearance')"><i class="fa fa-palette"></i> Appearance</li>
         </ul>
     </div>
     
@@ -784,6 +239,112 @@ footer {
                     </table>
                 </div>
             </div>
+
+            <h3 class="clinic-sub" style="margin-top:30px;">User Accounts (Portal Login)</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:30px;">
+                <form id="addUserForm" class="clinic-form" style="margin-bottom:0;">
+                    <input type="text" id="userName" placeholder="Full Name" required>
+                    <input type="email" id="userEmail" placeholder="Login Email" required>
+                    <input type="password" id="userPassword" placeholder="Password (min 6 characters)" minlength="6" required>
+                    <select id="userRole" required>
+                        <option value="Pharmacist">Pharmacist</option>
+                        <option value="Pharmacy Assistant">Pharmacy Assistant</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                    <button type="submit" class="apply-btn"><i class="fa fa-user-plus"></i> Add User</button>
+                </form>
+                <div>
+                    <table class="admin-data-table" style="margin-top:0;">
+                        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Action</th></tr></thead>
+                        <tbody id="usersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="panel-clinicDashboard" class="admin-panel-card" style="display: none;">
+            <h2>Dashboard Overview</h2>
+            <div class="clinic-metrics">
+                <div class="clinic-metric"><i class="fa fa-users"></i><div><p>Total Patient Visits</p><h3 id="clinicStatVisits">0</h3></div></div>
+                <div class="clinic-metric info"><i class="fa fa-pills"></i><div><p>Total Medicines</p><h3 id="clinicStatMeds">0</h3></div></div>
+                <div class="clinic-metric warn"><i class="fa fa-triangle-exclamation"></i><div><p>Low Stock Items</p><h3 id="clinicStatLow">0</h3></div></div>
+                <div class="clinic-metric info"><i class="fa fa-wave-square"></i><div><p>Total History Logs</p><h3 id="clinicStatLogs">0</h3></div></div>
+            </div>
+            <h3 class="clinic-sub" style="margin-top:0;">Recent System Activity</h3>
+            <table class="admin-data-table">
+                <thead><tr><th>Timestamp</th><th>Category</th><th>Action Details</th></tr></thead>
+                <tbody id="clinicRecentLogs"></tbody>
+            </table>
+        </div>
+
+        <div id="panel-clinicVisits" class="admin-panel-card" style="display: none;">
+            <h2>Patient Consultations &amp; Medical History</h2>
+            <h3 class="clinic-sub" style="margin-top:0;">New Consultation &amp; Visit</h3>
+            <form id="clinicVisitForm" class="clinic-form">
+                <div class="row">
+                    <input type="text" id="cvName" placeholder="Patient Full Name" required>
+                    <input type="number" id="cvAge" placeholder="Age" min="0" required>
+                    <select id="cvGender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="text" id="cvDoctor" placeholder="Attending Doctor" required>
+                </div>
+                <textarea id="cvSymptoms" rows="2" placeholder="Symptoms &amp; Complaints" required></textarea>
+                <textarea id="cvDiagnosis" rows="2" placeholder="Diagnosis Details" required></textarea>
+                <textarea id="cvPrescription" rows="2" placeholder="Prescribed Medicines / Instructions" required></textarea>
+                <button type="submit" class="apply-btn" style="width:auto; padding:10px 20px;"><i class="fa fa-plus"></i> Record Patient Visit</button>
+            </form>
+            <h3 class="clinic-sub">Patient Consultation History</h3>
+            <table class="admin-data-table">
+                <thead><tr><th>Date &amp; Time</th><th>Patient Name</th><th>Age/Gender</th><th>Doctor</th><th>Diagnosis</th><th>Prescription</th></tr></thead>
+                <tbody id="clinicVisitsBody"></tbody>
+            </table>
+        </div>
+
+        <div id="panel-clinicPharmacy" class="admin-panel-card" style="display: none;">
+            <h2>Pharmacy Inventory &amp; Sales Dispatch</h2>
+            <h3 class="clinic-sub" style="margin-top:0;">Add New Medicine Inventory</h3>
+            <form id="clinicMedForm" class="clinic-form">
+                <div class="row">
+                    <input type="text" id="cmName" placeholder="Medicine Name" required>
+                    <input type="number" id="cmStock" placeholder="Stock Quantity" min="1" required>
+                    <input type="number" id="cmPrice" placeholder="Price (KSh)" min="0" step="0.01" required>
+                    <button type="submit" class="apply-btn"><i class="fa fa-circle-plus"></i> Add Item</button>
+                </div>
+            </form>
+            <h3 class="clinic-sub">Current Stock &amp; Dispense</h3>
+            <table class="admin-data-table">
+                <thead><tr><th>Medicine Name</th><th>Available Stock</th><th>Unit Price (KSh)</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody id="clinicMedsBody"></tbody>
+            </table>
+        </div>
+
+        <div id="panel-clinicHistory" class="admin-panel-card" style="display: none;">
+            <div class="clinic-head">
+                <h2 style="flex:1; margin-bottom:0;">Full System Audit Trail</h2>
+                <button type="button" class="apply-btn" style="width:auto; padding:10px 20px;" onclick="clinicExportLogs()"><i class="fa fa-download"></i> Export CSV</button>
+            </div>
+            <div class="clinic-filter" style="margin-top:20px;">
+                <input type="text" id="clinicLogSearch" placeholder="Search event history..." oninput="clinicRenderLogs()">
+                <select id="clinicLogCategory" onchange="clinicRenderLogs()">
+                    <option value="ALL">All Event Categories</option>
+                    <option value="PATIENT_VISIT">Patient Visits</option>
+                    <option value="PHARMACY_SALE">Pharmacy Sales</option>
+                    <option value="INVENTORY">Inventory Updates</option>
+                </select>
+            </div>
+            <table class="admin-data-table">
+                <thead><tr><th>Timestamp</th><th>Category</th><th>Action / Event Description</th></tr></thead>
+                <tbody id="clinicLogsBody"></tbody>
+            </table>
+        </div>
+
+        <div id="panel-appearance" class="admin-panel-card" style="display: none;">
+            <h2>Appearance</h2>
+            <div data-acacia-appearance></div>
         </div>
     </div>
 </div>
@@ -998,580 +559,7 @@ footer {
     <div class="footer-bottom">&copy; 2026 Apex Pharmacy & Medical Supplies. All Rights Reserved.</div>
 </footer>
 
-<script>
-const products = [
-    { id: 1, name: "Amoxicillin & Clavulanate 625mg", category: "Prescription", brand: "GSK", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 1200, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
-    { id: 2, name: "Panadol Extra Paracetamol 500mg", category: "OTC Medicine", brand: "GSK", form: "Tablets", rx: "OTC", rating: 5, basePrice: 250, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
-    { id: 3, name: "Seven Seas Cod Liver Oil + Omega 3", category: "Vitamins", brand: "Seven Seas", form: "Capsules", rx: "OTC", rating: 5, basePrice: 2800, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 4, name: "Digital Infrared Blood Pressure Monitor", category: "First Aid", brand: "Bayer", form: "Device", rx: "OTC", rating: 4, basePrice: 4500, discount: 15, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 5, name: "Pfizer Lipitor Atorvastatin 20mg", category: "Prescription", brand: "Pfizer", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 3400, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
-    { id: 6, name: "Hydrocortisone Skin Relief Cream 1%", category: "OTC Medicine", brand: "Novartis", form: "Cream", rx: "OTC", rating: 4, basePrice: 650, discount: 5, inStock: false, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 7, name: "Centrum Multivitamin Adult 100 Tablets", category: "Vitamins", brand: "Pfizer", form: "Tablets", rx: "OTC", rating: 5, basePrice: 2200, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
-    { id: 8, name: "Ibuprofen Pain Relief 400mg", category: "OTC Medicine", brand: "Advil", form: "Capsules", rx: "OTC", rating: 4, basePrice: 350, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
-    { id: 9, name: "Omeprazole Acid Reflux 20mg", category: "Prescription", brand: "AstraZeneca", form: "Capsules", rx: "Rx Required", rating: 4, basePrice: 1500, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
-    { id: 10, name: "Cetirizine Allergy Relief 10mg", category: "OTC Medicine", brand: "GSK", form: "Tablets", rx: "OTC", rating: 5, basePrice: 300, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
-    { id: 11, name: "Metformin Hydrochloride 500mg", category: "Prescription", brand: "Merck", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 850, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
-    { id: 12, name: "Aspirin Low Dose 81mg", category: "OTC Medicine", brand: "Bayer", form: "Tablets", rx: "OTC", rating: 4, basePrice: 400, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
-    { id: 13, name: "Vitamin C 1000mg Effervescent Tablets", category: "Vitamins", brand: "Redoxon", form: "Tablets", rx: "OTC", rating: 5, basePrice: 950, discount: 12, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 14, name: "Digital Clinical Thermometer", category: "First Aid", brand: "Omron", form: "Device", rx: "OTC", rating: 5, basePrice: 1100, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 15, name: "Glucerna Nutritional Powder 850g", category: "Vitamins", brand: "Abbott", form: "Powder", rx: "OTC", rating: 5, basePrice: 4200, discount: 8, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 16, name: "Saline Nasal Spray 50ml", category: "OTC Medicine", brand: "Sterimar", form: "Spray", rx: "OTC", rating: 4, basePrice: 750, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 17, name: "Azithromycin 500mg Tablets", category: "Prescription", brand: "Pfizer", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 1800, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
-    { id: 18, name: "Diclofenac Sodium Gel 1%", category: "OTC Medicine", brand: "Voltaren", form: "Gel", rx: "OTC", rating: 5, basePrice: 900, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 19, name: "Calcium + Vitamin D3 Tablets", category: "Vitamins", brand: "Caltrate", form: "Tablets", rx: "OTC", rating: 4, basePrice: 1600, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
-    { id: 20, name: "First Aid Emergency Trauma Kit", category: "First Aid", brand: "Johnson & Johnson", form: "Kit", rx: "OTC", rating: 5, basePrice: 3500, discount: 20, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 21, name: "Losartan Potassium 50mg", category: "Prescription", brand: "Merck", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 1100, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
-    { id: 22, name: "Cough Syrup Expectorant 100ml", category: "OTC Medicine", brand: "Benylin", form: "Syrup", rx: "OTC", rating: 4, basePrice: 550, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
-    { id: 23, name: "Zinc Gluconate 50mg Tablets", category: "Vitamins", brand: "Nature's Bounty", form: "Tablets", rx: "OTC", rating: 4, basePrice: 800, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 24, name: "Pulse Oximeter Fingertip", category: "First Aid", brand: "Bayer", form: "Device", rx: "OTC", rating: 5, basePrice: 2400, discount: 15, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 25, name: "Amlodipine Besylate 5mg", category: "Prescription", brand: "Pfizer", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 900, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
-    { id: 26, name: "Antacid Chewable Tablets 100s", category: "OTC Medicine", brand: "Tums", form: "Tablets", rx: "OTC", rating: 4, basePrice: 600, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
-    { id: 27, name: "Iron Supplement Ferrous Sulfate", category: "Vitamins", brand: "Nature Made", form: "Tablets", rx: "OTC", rating: 4, basePrice: 700, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
-    { id: 28, name: "Elastic Adhesive Bandage 3 inch", category: "First Aid", brand: "Elastoplast", form: "Bandage", rx: "OTC", rating: 5, basePrice: 250, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 29, name: "Prednisone 5mg Tablets", category: "Prescription", brand: "Novartis", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 600, discount: 0, inStock: false, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
-    { id: 30, name: "Loperamide Anti-Diarrheal Capsules", category: "OTC Medicine", brand: "Imodium", form: "Capsules", rx: "OTC", rating: 5, basePrice: 450, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
-    { id: 31, name: "Magnesium Citrate 500mg", category: "Vitamins", brand: "NOW Foods", form: "Capsules", rx: "OTC", rating: 4, basePrice: 1400, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 32, name: "Medical Face Masks 50pcs Box", category: "First Aid", brand: "3M", form: "Mask", rx: "OTC", rating: 5, basePrice: 500, discount: 25, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 33, name: "Sertraline Hydrochloride 50mg", category: "Prescription", brand: "Pfizer", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 1900, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
-    { id: 34, name: "Throat Lozenges Honey Lemon 24s", category: "OTC Medicine", brand: "Strepsils", form: "Lozenges", rx: "OTC", rating: 5, basePrice: 300, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
-    { id: 35, name: "Vitamin B Complex High Potency", category: "Vitamins", brand: "Nature's Bounty", form: "Tablets", rx: "OTC", rating: 4, basePrice: 1100, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
-    { id: 36, name: "Antiseptic Disinfectant Liquid 500ml", category: "First Aid", brand: "Dettol", form: "Liquid", rx: "OTC", rating: 5, basePrice: 650, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 37, name: "Montelukast Sodium 10mg", category: "Prescription", brand: "Merck", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 2100, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
-    { id: 38, name: "Soothe Eye Drops Lubricant 15ml", category: "OTC Medicine", brand: "Visine", form: "Drops", rx: "OTC", rating: 4, basePrice: 700, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 39, name: "Fish Oil Omega 3 1000mg 120s", category: "Vitamins", brand: "Kirkland Signature", form: "Capsules", rx: "OTC", rating: 5, basePrice: 2400, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 40, name: "Digital Non-Contact Infrared Thermometer", category: "First Aid", brand: "Omron", form: "Device", rx: "OTC", rating: 5, basePrice: 3800, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 41, name: "Escitalopram Oxalate 10mg", category: "Prescription", brand: "Forest Labs", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 1750, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
-    { id: 42, name: "Hydrocortisone Cream Plus 15g", category: "OTC Medicine", brand: "Canesten", form: "Cream", rx: "OTC", rating: 4, basePrice: 550, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 43, name: "Biotin 10000mcg Hair Skin Nails", category: "Vitamins", brand: "Natrol", form: "Tablets", rx: "OTC", rating: 5, basePrice: 2100, discount: 15, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
-    { id: 44, name: "Sterile Gauze Swabs 10cm x 10cm", category: "First Aid", brand: "Smith & Nephew", form: "Bandage", rx: "OTC", rating: 4, basePrice: 300, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 45, name: "Ciprofloxacin 500mg Tablets", category: "Prescription", brand: "Bayer", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 1400, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
-    { id: 46, name: "Vapor Rub Chest Decongestant 50g", category: "OTC Medicine", brand: "Vicks", form: "Ointment", rx: "OTC", rating: 5, basePrice: 480, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 47, name: "CoQ10 100mg Heart Health", category: "Vitamins", brand: "Doctor's Best", form: "Capsules", rx: "OTC", rating: 5, basePrice: 3100, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 48, name: "Neosporin Original First Aid Antibiotic Ointment", category: "First Aid", brand: "Johnson & Johnson", form: "Ointment", rx: "OTC", rating: 5, basePrice: 850, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 49, name: "Pantoprazole Sodium 40mg", category: "Prescription", brand: "Takeda", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 1650, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
-    { id: 50, name: "Clotrimazole Antifungal Cream 1%", category: "OTC Medicine", brand: "Canesten", form: "Cream", rx: "OTC", rating: 5, basePrice: 750, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 51, name: "Glucosamine Chondroitin Joint Support", category: "Vitamins", brand: "Osteo Bi-Flex", form: "Tablets", rx: "OTC", rating: 5, basePrice: 3600, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
-    { id: 52, name: "Medical Paper Tape 1 inch", category: "First Aid", brand: "3M", form: "Tape", rx: "OTC", rating: 4, basePrice: 200, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 53, name: "Levothyroxine Sodium 50mcg", category: "Prescription", brand: "AbbVie", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 950, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
-    { id: 54, name: "Simethicone Gas Relief 80mg", category: "OTC Medicine", brand: "Gas-X", form: "Capsules", rx: "OTC", rating: 4, basePrice: 500, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
-    { id: 55, name: "Melatonin 5mg Sleep Aid", category: "Vitamins", brand: "Nature Made", form: "Tablets", rx: "OTC", rating: 5, basePrice: 1250, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 56, name: "Instant Cold Pack Disposable", category: "First Aid", brand: "Elastoplast", form: "Device", rx: "OTC", rating: 4, basePrice: 350, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 57, name: "Prednisolone Eye Drops 5ml", category: "Prescription", brand: "Allergan", form: "Drops", rx: "Rx Required", rating: 4, basePrice: 1300, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
-    { id: 58, name: "Hydrogen Peroxide Antiseptic 200ml", category: "OTC Medicine", brand: "Cura", form: "Liquid", rx: "OTC", rating: 4, basePrice: 250, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 59, name: "Pregnancy Test Kit One Step", category: "First Aid", brand: "Clearblue", form: "Device", rx: "OTC", rating: 5, basePrice: 900, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 60, name: "Multivitamin Liquid for Children 250ml", category: "Vitamins", brand: "Abbott", form: "Syrup", rx: "OTC", rating: 5, basePrice: 1450, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 61, name: "Rosuvastatin Calcium 10mg", category: "Prescription", brand: "AstraZeneca", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 2600, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
-    { id: 62, name: "Isopropyl Alcohol Rubbing 70% 500ml", category: "OTC Medicine", brand: "Derma", form: "Liquid", rx: "OTC", rating: 5, basePrice: 400, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 63, name: "Collagen Peptides Powder 400g", category: "Vitamins", brand: "Vital Proteins", form: "Powder", rx: "OTC", rating: 5, basePrice: 4500, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 64, name: "Compression Knee Brace Support", category: "First Aid", brand: "Futuro", form: "Device", rx: "OTC", rating: 4, basePrice: 2200, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 65, name: "Gabapentin 300mg Capsules", category: "Prescription", brand: "Pfizer", form: "Capsules", rx: "Rx Required", rating: 4, basePrice: 2000, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
-    { id: 66, name: "Wart Remover Gel 10ml", category: "OTC Medicine", brand: "Compound W", form: "Gel", rx: "OTC", rating: 4, basePrice: 1100, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 67, name: "Probiotics 50 Billion CFU Capsules", category: "Vitamins", brand: "Garden of Life", form: "Capsules", rx: "OTC", rating: 5, basePrice: 3900, discount: 15, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 68, name: "Waterproof Adhesive Plasters Assorted 100s", category: "First Aid", brand: "Elastoplast", form: "Bandage", rx: "OTC", rating: 5, basePrice: 450, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 69, name: "Tramadol Hydrochloride 50mg", category: "Prescription", brand: "Grunenthal", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 1600, discount: 0, inStock: false, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
-    { id: 70, name: "Eczema Relief Soothing Cream 200ml", category: "OTC Medicine", brand: "Cetaphil", form: "Cream", rx: "OTC", rating: 5, basePrice: 1800, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 71, name: "Vitamin D3 5000 IU Softgels", category: "Vitamins", brand: "NOW Foods", form: "Capsules", rx: "OTC", rating: 5, basePrice: 1500, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
-    { id: 72, name: "Digital Blood Glucose Meter Kit", category: "First Aid", brand: "Accu-Chek", form: "Device", rx: "OTC", rating: 5, basePrice: 3200, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 73, name: "Meloxicam 15mg Tablets", category: "Prescription", brand: "Boehringer Ingelheim", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 1150, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
-    { id: 74, name: "Nicotine Replacement Gum 2mg", category: "OTC Medicine", brand: "Nicorette", form: "Gum", rx: "OTC", rating: 4, basePrice: 2500, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
-    { id: 75, name: "Super B-Complex with Vitamin C", category: "Vitamins", brand: "Nature Made", form: "Tablets", rx: "OTC", rating: 4, basePrice: 1350, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 76, name: "Medical Latex Examination Gloves 100s", category: "First Aid", brand: "Ansell", form: "Gloves", rx: "OTC", rating: 5, basePrice: 1200, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 77, name: "Furosemide 40mg Tablets", category: "Prescription", brand: "Sanofi", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 700, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
-    { id: 78, name: "Hemorrhoid Relief Ointment 30g", category: "OTC Medicine", brand: "Preparation H", form: "Ointment", rx: "OTC", rating: 4, basePrice: 950, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 79, name: "Prenatal Multivitamin Softgels", category: "Vitamins", brand: "One A Day", form: "Capsules", rx: "OTC", rating: 5, basePrice: 2900, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
-    { id: 80, name: "Hot Water Bottle Rubber 2L", category: "First Aid", brand: "Cura", form: "Device", rx: "OTC", rating: 4, basePrice: 650, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 81, name: "Spiriva Respimat Inhaler 2.5mcg", category: "Prescription", brand: "Boehringer Ingelheim", form: "Inhaler", rx: "Rx Required", rating: 5, basePrice: 6500, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
-    { id: 82, name: "Ear Wax Removal Drops 15ml", category: "OTC Medicine", brand: "Debrox", form: "Drops", rx: "OTC", rating: 4, basePrice: 800, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 83, name: "L-Carnitine 1000mg Liquid Energy", category: "Vitamins", brand: "Dymatize", form: "Liquid", rx: "OTC", rating: 4, basePrice: 3400, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 84, name: "Cervical Neck Collar Support", category: "First Aid", brand: "Futuro", form: "Device", rx: "OTC", rating: 4, basePrice: 1500, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 85, name: "Valsartan 80mg Tablets", category: "Prescription", brand: "Novartis", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 1700, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
-    { id: 86, name: "Dandruff Medicated Shampoo 200ml", category: "OTC Medicine", brand: "Nizoral", form: "Liquid", rx: "OTC", rating: 5, basePrice: 1400, discount: 5, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 87, name: "Organic Flaxseed Oil 1000mg", category: "Vitamins", brand: "Nature's Bounty", form: "Capsules", rx: "OTC", rating: 4, basePrice: 1900, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 88, name: "Medical Ice Bag Reusable", category: "First Aid", brand: "Elastoplast", form: "Device", rx: "OTC", rating: 5, basePrice: 550, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 89, name: "Allopurinol 100mg Tablets", category: "Prescription", brand: "GSK", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 850, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
-    { id: 90, name: "Motion Sickness Relief Meclizine", category: "OTC Medicine", brand: "Dramamine", form: "Tablets", rx: "OTC", rating: 4, basePrice: 600, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
-    { id: 91, name: "L-Glutamine Powder 500g", category: "Vitamins", brand: "Optimum Nutrition", form: "Powder", rx: "OTC", rating: 5, basePrice: 3800, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 92, name: "Walking Cane Adjustable Aluminum", category: "First Aid", brand: "Nova", form: "Device", rx: "OTC", rating: 4, basePrice: 2500, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 93, name: "Meloxicam 7.5mg Tablets", category: "Prescription", brand: "Boehringer Ingelheim", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 900, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=1000"] },
-    { id: 94, name: "Burn Jel Antiseptic Pain Reliever 3.5g", category: "OTC Medicine", brand: "Water-Jel", form: "Gel", rx: "OTC", rating: 5, basePrice: 200, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 95, name: "Turmeric Curcumin 1500mg with BioPerine", category: "Vitamins", brand: "Cosmo Naturals", form: "Capsules", rx: "OTC", rating: 5, basePrice: 2700, discount: 15, inStock: true, images: ["https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=1000"] },
-    { id: 96, name: "Digital Body Weight Bathroom Scale", category: "First Aid", brand: "Eatsmart", form: "Device", rx: "OTC", rating: 4, basePrice: 2800, discount: 12, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] },
-    { id: 97, name: "Spironolactone 25mg Tablets", category: "Prescription", brand: "Pfizer", form: "Tablets", rx: "Rx Required", rating: 4, basePrice: 1100, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
-    { id: 98, name: "Lip Balm Medicated SPF 15", category: "OTC Medicine", brand: "Blistex", form: "Ointment", rx: "OTC", rating: 5, basePrice: 250, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000"] },
-    { id: 99, name: "Super Vitamin E 400 IU", category: "Vitamins", brand: "Nature's Bounty", form: "Capsules", rx: "OTC", rating: 4, basePrice: 1600, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=1000"] },
-    { id: 100, name: "Nebulizer Compressor Machine Portable", category: "First Aid", brand: "Omron", form: "Device", rx: "OTC", rating: 5, basePrice: 5500, discount: 15, inStock: true, images: ["https://images.unsplash.com/photo-1631549916768-4119b2e5f926?q=80&w=1000"] }
-];
-
-const employees = [
-    { name: "Dr. Mary Omondi", email: "mary@apexpharmacy.com", role: "Pharmacist", rate: 4.0 },
-    { name: "John Kamau", email: "john@apexpharmacy.com", role: "Pharmacy Assistant", rate: 2.5 }
-];
-
-let invoices = [
-    { id: "RX-5001", customer: "David Njuguna", product: "Amoxicillin 625mg (Rx)", salesRep: "Dr. Mary Omondi", amount: 1200, status: "Paid" },
-    { id: "RX-5002", customer: "Alice Chebet", product: "Atorvastatin 20mg", salesRep: "John Kamau", amount: 3400, status: "Pending Verification" }
-];
-
-let cart = [];
-let selectedPaymentMethod = 'mpesa';
-
-function getEffectivePrice(item) {
-    return Math.round(item.basePrice * (1 - (item.discount || 0) / 100));
-}
-
-function renderProducts(list){
-    const grid = document.getElementById("itemGrid");
-    if(!grid) return;
-    grid.innerHTML = "";
-    if(list.length === 0) {
-        grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align:center; color:#888;">No pharmaceutical products match your filter parameters.</div>`;
-        return;
-    }
-    list.forEach((item) => {
-        const isRx = item.rx === "Rx Required";
-        const effPrice = getEffectivePrice(item);
-        const hasDiscount = item.discount > 0;
-
-        grid.innerHTML += `
-        <div class="item-card">
-            ${hasDiscount ? `<div class="sale-badge">-${item.discount}% OFF</div>` : ''}
-            <img src="${item.images[0]}" class="item-image">
-            <div class="card-body">
-                <div class="item-title">${item.name}</div>
-                <div class="stars">${'★'.repeat(item.rating)}${'☆'.repeat(5 - item.rating)}</div>
-                <div style="margin-bottom:10px;">
-                    <span style="font-size:18px; font-weight:bold; color:#00a884;">KSh ${effPrice.toLocaleString()}</span>
-                    ${hasDiscount ? `<span style="font-size:13px; color:#888; text-decoration:line-through; margin-left:8px;">KSh ${item.basePrice.toLocaleString()}</span>` : ''}
-                </div>
-                <div class="item-info">
-                    <div><i class="fa fa-folder"></i> ${item.category}</div>
-                    <div><i class="fa fa-industry"></i> ${item.brand}</div>
-                    <div><i class="fa fa-pills"></i> ${item.form}</div>
-                    <div><span class="rx-badge ${isRx ? 'rx-required' : 'rx-otc'}">${item.rx}</span></div>
-                </div>
-                <div class="card-buttons">
-                    <button class="add-cart-btn" onclick="addToCart(${item.id})"><i class="fa fa-cart-plus"></i> Cart</button>
-                    <button class="inquiry-btn" onclick="openModal(${item.id})">Consult</button>
-                    <button class="view-btn" onclick="openModal(${item.id})">Details</button>
-                </div>
-            </div>
-        </div>`;
-    });
-}
-
-function showPage(page, navElement) {
-    if(navElement) {
-        document.querySelectorAll('.nav a').forEach(el => el.classList.remove('active-nav'));
-        navElement.classList.add('active-nav');
-    }
-
-    const catalogSec = document.getElementById("catalogSection");
-    const topSearchSec = document.getElementById("topSearchSection");
-    const filterSidebar = document.getElementById("mainFilterSidebar");
-    const deliverySec = document.getElementById("deliverySection");
-    const contactSec = document.getElementById("contactSection");
-    const pageTitle = document.getElementById("pageSectionTitle");
-
-    catalogSec.style.display = "none";
-    topSearchSec.style.display = "none";
-    filterSidebar.style.display = "none";
-    deliverySec.style.display = "none";
-    contactSec.style.display = "none";
-
-    if (page === 'storefront') {
-        catalogSec.style.display = "block";
-        topSearchSec.style.display = "flex";
-        filterSidebar.style.display = "block";
-        pageTitle.innerText = "Verified Pharmaceutical Products";
-        renderProducts(products);
-    } else if (page === 'prescription') {
-        catalogSec.style.display = "block";
-        topSearchSec.style.display = "flex";
-        filterSidebar.style.display = "block";
-        pageTitle.innerText = "Prescription Drugs (Doctor Note Required)";
-        renderProducts(products.filter(p => p.category === "Prescription"));
-    } else if (page === 'otc') {
-        catalogSec.style.display = "block";
-        topSearchSec.style.display = "flex";
-        filterSidebar.style.display = "block";
-        pageTitle.innerText = "Over-The-Counter (OTC) Medicines";
-        renderProducts(products.filter(p => p.category === "OTC Medicine"));
-    } else if (page === 'supplements') {
-        catalogSec.style.display = "block";
-        topSearchSec.style.display = "flex";
-        filterSidebar.style.display = "block";
-        pageTitle.innerText = "Vitamins & Nutritional Supplements";
-        renderProducts(products.filter(p => p.category === "Vitamins"));
-    } else if (page === 'firstaid') {
-        catalogSec.style.display = "block";
-        topSearchSec.style.display = "flex";
-        filterSidebar.style.display = "block";
-        pageTitle.innerText = "First Aid & Medical Equipment";
-        renderProducts(products.filter(p => p.category === "First Aid"));
-    } else if (page === 'delivery') {
-        deliverySec.style.display = "block";
-    } else if (page === 'contact') {
-        contactSec.style.display = "block";
-    }
-}
-
-function openModal(id){
-    const item = products.find(p => p.id === id);
-    document.getElementById("itemModal").style.display = "flex";
-    document.getElementById("modalMainImage").src = item.images[0];
-    document.getElementById("modalTitle").innerText = item.name;
-    document.getElementById("modalStars").innerText = '★'.repeat(item.rating) + '☆'.repeat(5 - item.rating);
-    
-    const effPrice = getEffectivePrice(item);
-    const hasDiscount = item.discount > 0;
-    document.getElementById("modalPriceBox").innerHTML = `
-        <span style="font-size:22px; font-weight:bold; color: #00a884;">KSh ${effPrice.toLocaleString()}</span>
-        ${hasDiscount ? `<span style="font-size:14px; color:#888; text-decoration:line-through; margin-left:10px;">KSh ${item.basePrice.toLocaleString()} (-${item.discount}%)</span>` : ''}
-    `;
-
-    document.getElementById("modalItemInfo").innerHTML = `
-        <div>Category: <b>${item.category}</b></div>
-        <div>Brand: <b>${item.brand}</b></div>
-        <div>Form: <b>${item.form}</b></div>
-        <div>Requirement: <b>${item.rx}</b></div>`;
-
-    const related = products.filter(p => p.category === item.category && p.id !== item.id);
-    const relatedGrid = document.getElementById("relatedGrid");
-    relatedGrid.innerHTML = "";
-    if(related.length === 0) {
-        relatedGrid.innerHTML = "<p style='font-size:13px; color:#777;'>No direct alternatives found in this category.</p>";
-    } else {
-        related.forEach(rel => {
-            const relEff = getEffectivePrice(rel);
-            relatedGrid.innerHTML += `
-            <div class="related-card" onclick="openModal(${rel.id})">
-                <img src="${rel.images[0]}">
-                <div style="font-size:12px; font-weight:bold; margin-top:5px;">${rel.name}</div>
-                <div style="font-size:12px; color:#00a884;">KSh ${relEff.toLocaleString()}</div>
-            </div>`;
-        });
-    }
-}
-
-function closeModal(id){ document.getElementById(id).style.display = "none"; }
-
-/* Cart & Checkout */
-function addToCart(id) {
-    const item = products.find(p => p.id === id);
-    const existing = cart.find(c => c.id === id);
-    if(existing) { existing.qty += 1; }
-    else { cart.push({ ...item, qty: 1 }); }
-    updateCartUI();
-    alert(`${item.name} added to cart!`);
-}
-
-function updateCartUI() {
-    document.getElementById("cartCount").innerText = cart.reduce((sum, item) => sum + item.qty, 0);
-    const cartList = document.getElementById("cartItemsList");
-    cartList.innerHTML = "";
-    let total = 0;
-    cart.forEach((item, idx) => {
-        const effPrice = getEffectivePrice(item);
-        const itemTotal = effPrice * item.qty;
-        total += itemTotal;
-        cartList.innerHTML += `
-        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee;">
-            <div>
-                <b>${item.name}</b><br>
-                <small>KSh ${effPrice.toLocaleString()} x ${item.qty}</small>
-            </div>
-            <div>
-                <b>KSh ${itemTotal.toLocaleString()}</b>
-                <button onclick="removeFromCart(${idx})" style="background:none; border:none; color:red; margin-left:8px; cursor:pointer;"><i class="fa fa-trash"></i></button>
-            </div>
-        </div>`;
-    });
-    document.getElementById("cartTotalPrice").innerText = `KSh ${total.toLocaleString()}`;
-}
-
-function removeFromCart(index) {
-    cart.splice(index, 1);
-    updateCartUI();
-}
-
-function openCartModal() {
-    updateCartUI();
-    document.getElementById("cartModal").style.display = "flex";
-}
-
-function selectPayment(method) {
-    selectedPaymentMethod = method;
-    document.querySelectorAll('.payment-method-card').forEach(el => el.classList.remove('active'));
-    if(method === 'mpesa') {
-        document.getElementById('payMpesa').classList.add('active');
-        document.getElementById('mpesaFields').style.display = 'block';
-        document.getElementById('cardFields').style.display = 'none';
-    } else if(method === 'card') {
-        document.getElementById('payCard').classList.add('active');
-        document.getElementById('mpesaFields').style.display = 'none';
-        document.getElementById('cardFields').style.display = 'grid';
-    } else {
-        document.getElementById('payCod').classList.add('active');
-        document.getElementById('mpesaFields').style.display = 'none';
-        document.getElementById('cardFields').style.display = 'none';
-    }
-}
-
-function processPayment(e) {
-    e.preventDefault();
-    if(cart.length === 0) { alert("Your medical cart is empty!"); return; }
-    if(selectedPaymentMethod === 'mpesa') {
-        alert("M-Pesa payment prompt sent to mobile phone. Please enter PIN to complete payment.");
-    } else {
-        alert("Order successfully placed! A pharmacist will process your delivery.");
-    }
-    cart = [];
-    updateCartUI();
-    closeModal("cartModal");
-}
-
-/* Admin Logic */
-document.getElementById("mainLogo").addEventListener("click", () => {
-    document.getElementById("adminLoginModal").style.display = "flex";
-});
-
-document.getElementById("adminLoginForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = document.getElementById("adminEmail").value;
-    const pwd = document.getElementById("adminPassword").value;
-
-    if(email === "adminacaciabooks@gmail.com" && pwd === "admin123") {
-        closeModal("adminLoginModal");
-        activateAdminDashboard();
-    } else { 
-        alert("Invalid credentials. Access denied."); 
-    }
-});
-
-function activateAdminDashboard() {
-    document.getElementById("publicContainer").style.display = "none";
-    document.getElementById("adminContainer").style.display = "flex";
-    document.getElementById("mainNavbar").innerHTML = `
-        <span style="color:#00a884; font-weight:bold;"><i class="fa fa-user-md"></i> Pharmacist Portal</span>
-        <a href="#" onclick="location.reload()" style="background:#00a884; padding:6px 12px; border-radius:4px; margin-left:10px;"><i class="fa fa-sign-out-alt"></i> Logout</a>`;
-    renderAdminTables();
-}
-
-function switchAdminTab(tab) {
-    document.querySelectorAll('.admin-panel-card').forEach(el => el.style.display = 'none');
-    document.querySelectorAll('.admin-sidebar-menu li').forEach(el => el.classList.remove('active-admin-tab'));
-    document.getElementById(`panel-${tab}`).style.display = 'block';
-    event.currentTarget.classList.add('active-admin-tab');
-}
-
-function renderAdminTables() {
-    // Render Invoices Table
-    const invTable = document.getElementById("adminInvoiceTableBody");
-    invTable.innerHTML = "";
-    let grossSales = 0;
-
-    invoices.forEach(inv => {
-        if(inv.status === "Paid") grossSales += inv.amount;
-        invTable.innerHTML += `
-        <tr>
-            <td><b>${inv.id}</b></td>
-            <td>${inv.customer}</td>
-            <td>${inv.product}</td>
-            <td>${inv.salesRep}</td>
-            <td>KSh ${inv.amount.toLocaleString()}</td>
-            <td><span class="status-badge ${inv.status === 'Paid' ? 'status-success' : 'status-pending'}">${inv.status}</span></td>
-            <td>
-                <button class="action-btn btn-edit" onclick="editInvoice('${inv.id}')"><i class="fa fa-edit"></i> Edit</button>
-                <button class="action-btn btn-delete" onclick="deleteInvoice('${inv.id}')"><i class="fa fa-trash"></i> Delete</button>
-            </td>
-        </tr>`;
-    });
-
-    document.getElementById("revenueGrossSales").innerText = "KSh " + grossSales.toLocaleString();
-
-    // Render Products Table
-    const prodTable = document.getElementById("adminProductsTableBody");
-    prodTable.innerHTML = "";
-    products.forEach(p => {
-        const eff = getEffectivePrice(p);
-        prodTable.innerHTML += `
-        <tr>
-            <td><b>${p.name}</b></td>
-            <td>${p.category}</td>
-            <td>KSh ${p.basePrice.toLocaleString()}</td>
-            <td><span style="color: ${p.discount > 0 ? '#e74c3c':'#333'}; font-weight: bold;">${p.discount}%</span></td>
-            <td><b style="color:#00a884;">KSh ${eff.toLocaleString()}</b></td>
-            <td><span class="status-badge ${p.inStock ? 'status-success':'status-pending'}">${p.inStock ? 'In Stock':'Out'}</span></td>
-            <td>
-                <button class="action-btn btn-edit" onclick="openDiscountModal(${p.id})"><i class="fa fa-percent"></i> Discount</button>
-            </td>
-        </tr>`;
-    });
-
-    // Render Employees and Commissions Table
-    const empTable = document.getElementById("adminEmployeesTableBody");
-    const commTable = document.getElementById("adminCommissionTableBody");
-    empTable.innerHTML = ""; commTable.innerHTML = "";
-    let totalComm = 0;
-    
-    employees.forEach(e => {
-        const salesVolume = invoices
-            .filter(i => i.salesRep === e.name && i.status === "Paid")
-            .reduce((sum, i) => sum + i.amount, 0);
-        const commissionEarned = (salesVolume * e.rate) / 100;
-        totalComm += commissionEarned;
-
-        empTable.innerHTML += `<tr><td><b>${e.name}</b></td><td>${e.role}</td><td>${e.rate}%</td></tr>`;
-        commTable.innerHTML += `<tr><td><b>${e.name}</b></td><td>${e.role}</td><td>KSh ${salesVolume.toLocaleString()}</td><td>${e.rate}%</td><td style="color:#137333; font-weight:bold;">KSh ${commissionEarned.toLocaleString()}</td></tr>`;
-    });
-
-    document.getElementById("revenueCommissionsPaid").innerText = "KSh " + totalComm.toLocaleString();
-}
-
-/* Discount Manager */
-function openDiscountModal(id) {
-    const item = products.find(p => p.id === id);
-    document.getElementById("discProdId").value = item.id;
-    document.getElementById("discProdNameDisplay").innerText = item.name;
-    document.getElementById("discValue").value = item.discount;
-    document.getElementById("discountModal").style.display = "flex";
-}
-
-document.getElementById("discountForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const id = parseInt(document.getElementById("discProdId").value);
-    const newDisc = parseFloat(document.getElementById("discValue").value);
-
-    const item = products.find(p => p.id === id);
-    if(item) {
-        item.discount = newDisc;
-    }
-
-    renderAdminTables();
-    renderProducts(products);
-    closeModal("discountModal");
-    alert("Discount updated successfully!");
-});
-
-/* Invoice Operations */
-function openInvoiceModal(invId = null) {
-    const repSelect = document.getElementById("invSalesRep");
-    repSelect.innerHTML = employees.map(e => `<option value="${e.name}">${e.name}</option>`).join("");
-
-    if(invId) {
-        const inv = invoices.find(i => i.id === invId);
-        document.getElementById("invoiceModalTitle").innerText = "Edit Rx Invoice (" + inv.id + ")";
-        document.getElementById("invId").value = inv.id;
-        document.getElementById("invCustomer").value = inv.customer;
-        document.getElementById("invProduct").value = inv.product;
-        document.getElementById("invSalesRep").value = inv.salesRep;
-        document.getElementById("invAmount").value = inv.amount;
-        document.getElementById("invStatus").value = inv.status;
-    } else {
-        document.getElementById("invoiceModalTitle").innerText = "Create Rx Invoice";
-        document.getElementById("invoiceForm").reset();
-        document.getElementById("invId").value = "";
-    }
-    document.getElementById("invoiceModal").style.display = "flex";
-}
-
-function editInvoice(id) { openInvoiceModal(id); }
-
-function deleteInvoice(id) {
-    if(confirm(`Delete invoice ${id}?`)) {
-        invoices = invoices.filter(i => i.id !== id);
-        renderAdminTables();
-    }
-}
-
-document.getElementById("invoiceForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const id = document.getElementById("invId").value;
-    const customer = document.getElementById("invCustomer").value;
-    const product = document.getElementById("invProduct").value;
-    const salesRep = document.getElementById("invSalesRep").value;
-    const amount = parseFloat(document.getElementById("invAmount").value);
-    const status = document.getElementById("invStatus").value;
-
-    if(id) {
-        const index = invoices.findIndex(i => i.id === id);
-        if(index !== -1) { invoices[index] = { id, customer, product, salesRep, amount, status }; }
-    } else {
-        const newId = `RX-${5000 + invoices.length + 1}`;
-        invoices.push({ id: newId, customer, product, salesRep, amount, status });
-    }
-
-    renderAdminTables();
-    closeModal("invoiceModal");
-});
-
-/* Product Operations */
-function openAddProductModal(){ document.getElementById("addProductModal").style.display = "flex"; }
-
-document.getElementById("addProductForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const name = document.getElementById("addProdName").value;
-    const cat = document.getElementById("addProdCat").value;
-    const basePrice = parseFloat(document.getElementById("addProdPrice").value);
-    const discount = parseFloat(document.getElementById("addProdDiscount").value) || 0;
-    const brand = document.getElementById("addProdBrand").value || "Generic";
-    const form = document.getElementById("addProdForm").value;
-    const rx = document.getElementById("addProdRx").value;
-    const img = document.getElementById("addProdImage").value || "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000";
-
-    const newId = products.length + 1;
-    products.push({ id: newId, name, category: cat, brand, form, rx, rating: 5, basePrice, discount, inStock: true, images: [img] });
-    renderProducts(products);
-    renderAdminTables();
-    closeModal("addProductModal");
-});
-
-/* Filters */
-function applyFilters() {
-    const kw = document.getElementById("filterKeyword").value.toLowerCase();
-    const cat = document.getElementById("filterCategory").value;
-    const minPrice = parseFloat(document.getElementById("filterMinPrice").value) || 0;
-    const maxPrice = parseFloat(document.getElementById("filterMaxPrice").value) || Infinity;
-    const brand = document.getElementById("filterBrand").value;
-    const form = document.getElementById("filterForm").value;
-    const rxType = document.getElementById("filterRxType").value;
-    const inStockOnly = document.getElementById("filterInStockOnly").checked;
-
-    const filtered = products.filter(p => {
-        const eff = getEffectivePrice(p);
-        const matchesKw = p.name.toLowerCase().includes(kw);
-        const matchesCat = cat === "All" || p.category === cat;
-        const matchesPrice = eff >= minPrice && eff <= maxPrice;
-        const matchesBrand = brand === "All" || p.brand === brand;
-        const matchesForm = form === "All" || p.form === form;
-        const matchesRx = rxType === "All" || p.rx === rxType;
-        const matchesStock = !inStockOnly || p.inStock;
-
-        return matchesKw && matchesCat && matchesPrice && matchesBrand && matchesForm && matchesRx && matchesStock;
-    });
-
-    renderProducts(filtered);
-}
-
-function resetFilters() {
-    document.getElementById("filterKeyword").value = "";
-    document.getElementById("filterCategory").value = "All";
-    document.getElementById("filterMinPrice").value = "";
-    document.getElementById("filterMaxPrice").value = "";
-    document.getElementById("filterBrand").value = "All";
-    document.getElementById("filterForm").value = "All";
-    document.getElementById("filterRxType").value = "All";
-    document.getElementById("filterInStockOnly").checked = false;
-    renderProducts(products);
-}
-
-function topSearch() {
-    const val = document.getElementById("topSearchBar").value.toLowerCase();
-    const filtered = products.filter(p => p.name.toLowerCase().includes(val));
-    renderProducts(filtered);
-}
-
-renderProducts(products);
-</script>
+<script src="script.js"></script>
 </body>
 </html>
+
