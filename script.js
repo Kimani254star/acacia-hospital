@@ -1,3 +1,7 @@
+/* ===== Supabase (same project as Sweet Flowers Garden) ===== */
+const SUPABASE_URL = "https://dvyboakfwecqnjqjczur.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__bL-cHZPo4AejqQXtf0HTg_x5TjXPDe";
+
 const products = [
     { id: 1, name: "Amoxicillin & Clavulanate 625mg", category: "Prescription", brand: "GSK", form: "Tablets", rx: "Rx Required", rating: 5, basePrice: 1200, discount: 0, inStock: true, images: ["https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000"] },
     { id: 2, name: "Panadol Extra Paracetamol 500mg", category: "OTC Medicine", brand: "GSK", form: "Tablets", rx: "OTC", rating: 5, basePrice: 250, discount: 10, inStock: true, images: ["https://images.unsplash.com/photo-1550572017-edf7e100d024?q=80&w=1000"] },
@@ -334,19 +338,44 @@ document.getElementById("mainLogo").addEventListener("click", () => {
     document.getElementById("adminLoginModal").style.display = "flex";
 });
 
-document.getElementById("adminLoginForm").addEventListener("submit", (e) => {
+document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const email = document.getElementById("adminEmail").value;
+    const email = document.getElementById("adminEmail").value.trim();
     const pwd = document.getElementById("adminPassword").value;
 
-    const emailKey = email.trim().toLowerCase();
+    /* 1) Normal login: Supabase account + a row in apex_profiles */
+    if (sb) {
+        try {
+            const { error } = await sb.auth.signInWithPassword({ email, password: pwd });
+            if (!error) {
+                const { data: { session } } = await sb.auth.getSession();
+                const { data: prof, error: profError } = await sb.from("apex_profiles").select("*").eq("id", session.user.id).maybeSingle();
+                if (profError || !prof) {
+                    await sb.auth.signOut();
+                    alert("This login has no Pharmacy Portal access yet. Ask an admin to add you, or run the setup SQL.");
+                    return;
+                }
+                syncOn = true;
+                currentProfile = prof;
+                closeModal("adminLoginModal");
+                activateAdminDashboard();
+                await loadPortalData();
+                subscribePortal();
+                return;
+            }
+        } catch (err) { console.warn("Supabase login unavailable:", err); }
+    }
+
+    /* 2) Offline fallback (original behaviour): works, but nothing is synced */
+    const emailKey = email.toLowerCase();
     const isMainAdmin = emailKey === "adminacaciabooks@gmail.com" && pwd === "admin123";
     const isAddedUser = portalUsers.some(u => u.email === emailKey && u.password === pwd);
     if(isMainAdmin || isAddedUser) {
         closeModal("adminLoginModal");
         activateAdminDashboard();
-    } else { 
-        alert("Invalid credentials. Access denied."); 
+        alert("Offline mode: you are not signed in to Supabase, so changes will NOT be synced.");
+    } else {
+        alert("Invalid credentials. Access denied.");
     }
 });
 
@@ -356,8 +385,9 @@ function activateAdminDashboard() {
     const siteFooter = document.querySelector("footer");
     if (siteFooter) siteFooter.style.display = "none";
     document.getElementById("mainNavbar").innerHTML = `
-        <span style="color:#00a884; font-weight:bold;"><i class="fa fa-user-md"></i> Pharmacist Portal</span>
-        <a href="#" onclick="location.reload()" style="background:#00a884; padding:6px 12px; border-radius:4px; margin-left:10px;"><i class="fa fa-sign-out-alt"></i> Logout</a>`;
+        <span style="color:#00a884; font-weight:bold;"><i class="fa fa-user-md"></i> Pharmacist Portal <small id="syncBadge" style="opacity:.8"></small></span>
+        <a href="#" onclick="portalLogout()" style="background:#00a884; padding:6px 12px; border-radius:4px; margin-left:10px;"><i class="fa fa-sign-out-alt"></i> Logout</a>`;
+    applyRoleUI();
     renderAdminTables();
 }
 
@@ -441,13 +471,16 @@ function openDiscountModal(id) {
     document.getElementById("discountModal").style.display = "flex";
 }
 
-document.getElementById("discountForm").addEventListener("submit", (e) => {
+document.getElementById("discountForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const id = parseInt(document.getElementById("discProdId").value);
     const newDisc = parseFloat(document.getElementById("discValue").value);
 
     const item = products.find(p => p.id === id);
     if(item) {
+        if (syncOn) {
+            try { await db(sb.from("apex_products").update({ discount: newDisc }).eq("id", id)); } catch (err) { return; }
+        }
         item.discount = newDisc;
     }
 
@@ -481,14 +514,24 @@ function openInvoiceModal(invId = null) {
 
 function editInvoice(id) { openInvoiceModal(id); }
 
-function deleteInvoice(id) {
+async function deleteInvoice(id) {
     if(confirm(`Delete invoice ${id}?`)) {
+        if (syncOn) {
+            try { await db(sb.from("apex_invoices").delete().eq("id", id)); } catch (err) { return; }
+            await loadPortalData();
+            return;
+        }
         invoices = invoices.filter(i => i.id !== id);
         renderAdminTables();
     }
 }
 
-document.getElementById("invoiceForm").addEventListener("submit", (e) => {
+function nextInvoiceId() {
+    const nums = invoices.map(i => parseInt(String(i.id).replace(/\D/g, ""), 10)).filter(n => !isNaN(n));
+    return "RX-" + (Math.max(5000, ...nums) + 1);
+}
+
+document.getElementById("invoiceForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const id = document.getElementById("invId").value;
     const customer = document.getElementById("invCustomer").value;
@@ -496,6 +539,16 @@ document.getElementById("invoiceForm").addEventListener("submit", (e) => {
     const salesRep = document.getElementById("invSalesRep").value;
     const amount = parseFloat(document.getElementById("invAmount").value);
     const status = document.getElementById("invStatus").value;
+
+    if (syncOn) {
+        try {
+            if (id) { await db(sb.from("apex_invoices").update({ customer, product, sales_rep: salesRep, amount, status }).eq("id", id)); }
+            else { await db(sb.from("apex_invoices").insert({ id: nextInvoiceId(), customer, product, sales_rep: salesRep, amount, status })); }
+        } catch (err) { return; }
+        await loadPortalData();
+        closeModal("invoiceModal");
+        return;
+    }
 
     if(id) {
         const index = invoices.findIndex(i => i.id === id);
@@ -512,7 +565,7 @@ document.getElementById("invoiceForm").addEventListener("submit", (e) => {
 /* Product Operations */
 function openAddProductModal(){ document.getElementById("addProductModal").style.display = "flex"; }
 
-document.getElementById("addProductForm").addEventListener("submit", (e) => {
+document.getElementById("addProductForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const name = document.getElementById("addProdName").value;
     const cat = document.getElementById("addProdCat").value;
@@ -522,6 +575,16 @@ document.getElementById("addProductForm").addEventListener("submit", (e) => {
     const form = document.getElementById("addProdForm").value;
     const rx = document.getElementById("addProdRx").value;
     const img = document.getElementById("addProdImage").value || "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000";
+
+    if (syncOn) {
+        try {
+            await db(sb.from("apex_products").insert({ name, category: cat, brand, form, rx, rating: 5, base_price: basePrice, discount, in_stock: true, images: [img] }));
+        } catch (err) { return; }
+        await loadProducts();
+        renderAdminTables();
+        closeModal("addProductModal");
+        return;
+    }
 
     const newId = products.length + 1;
     products.push({ id: newId, name, category: cat, brand, form, rx, rating: 5, basePrice, discount, inStock: true, images: [img] });
@@ -592,7 +655,7 @@ function clinicEsc(v) {
 }
 
 function clinicSave() {
-    try {
+    if (!syncOn) try {
         localStorage.setItem('hospital_visits', JSON.stringify(clinicState.visits));
         localStorage.setItem('pharmacy_inventory', JSON.stringify(clinicState.inventory));
         localStorage.setItem('system_logs', JSON.stringify(clinicState.logs));
@@ -600,7 +663,12 @@ function clinicSave() {
     clinicRenderAll();
 }
 
-function clinicLog(category, description) {
+async function clinicLog(category, description) {
+    if (syncOn) {
+        await db(sb.from("apex_logs").insert({ category, description }));
+        await loadPortalData();
+        return;
+    }
     clinicState.logs.unshift({ id: Date.now(), timestamp: new Date().toLocaleString(), category, description });
     clinicSave();
 }
@@ -668,9 +736,14 @@ function clinicRenderLogs() {
     ).join('') : `<tr><td colspan="3" class="clinic-empty">${clinicState.logs.length ? 'No matching history logs found.' : 'No event history logged yet.'}</td></tr>`;
 }
 
-function clinicDispense(id) {
+async function clinicDispense(id) {
     const med = clinicState.inventory.find(m => m.id === id);
     if (!med) return;
+    if (syncOn) {
+        try { await db(sb.rpc("apex_dispense", { p_id: id })); } catch (err) { await loadPortalData(); return; }
+        await clinicLog('PHARMACY_SALE', `Dispensed 1 unit of ${med.name} for KSh ${med.price.toFixed(2)}.`);
+        return;
+    }
     if (med.stock > 0) {
         med.stock -= 1;
         clinicLog('PHARMACY_SALE', `Dispensed 1 unit of ${med.name} for KSh ${med.price.toFixed(2)}.`);
@@ -692,7 +765,7 @@ function clinicExportLogs() {
     URL.revokeObjectURL(a.href);
 }
 
-document.getElementById('clinicVisitForm').addEventListener('submit', function(e) {
+document.getElementById('clinicVisitForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const g = id => document.getElementById(id).value.trim();
     const visit = {
@@ -700,32 +773,141 @@ document.getElementById('clinicVisitForm').addEventListener('submit', function(e
         name: g('cvName'), age: g('cvAge'), gender: document.getElementById('cvGender').value,
         doctor: g('cvDoctor'), symptoms: g('cvSymptoms'), diagnosis: g('cvDiagnosis'), prescription: g('cvPrescription')
     };
-    clinicState.visits.unshift(visit);
-    clinicLog('PATIENT_VISIT', `Recorded consultation for patient: ${visit.name} (Doctor: Dr. ${visit.doctor})`);
+    if (syncOn) {
+        try {
+            await db(sb.from("apex_visits").insert({ name: visit.name, age: parseInt(visit.age, 10), gender: visit.gender, doctor: visit.doctor, symptoms: visit.symptoms, diagnosis: visit.diagnosis, prescription: visit.prescription }));
+        } catch (err) { return; }
+    } else {
+        clinicState.visits.unshift(visit);
+    }
+    await clinicLog('PATIENT_VISIT', `Recorded consultation for patient: ${visit.name} (Doctor: Dr. ${visit.doctor})`);
     this.reset();
 });
 
-document.getElementById('clinicMedForm').addEventListener('submit', function(e) {
+document.getElementById('clinicMedForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const name = document.getElementById('cmName').value.trim();
     const stock = parseInt(document.getElementById('cmStock').value, 10);
     const price = parseFloat(document.getElementById('cmPrice').value);
     const existing = clinicState.inventory.find(m => m.name.toLowerCase() === name.toLowerCase());
-    if (existing) {
-        existing.stock += stock;
-        existing.price = price;
-        clinicLog('INVENTORY', `Updated stock for ${name}. Added +${stock} units.`);
-    } else {
-        clinicState.inventory.push({ id: Date.now(), name, stock, price });
-        clinicLog('INVENTORY', `Added new medicine: ${name} with ${stock} initial units at KSh ${price.toFixed(2)}.`);
-    }
+    try {
+        if (existing) {
+            if (syncOn) await db(sb.from("apex_medicines").update({ stock: existing.stock + stock, price }).eq("id", existing.id));
+            else { existing.stock += stock; existing.price = price; }
+            await clinicLog('INVENTORY', `Updated stock for ${name}. Added +${stock} units.`);
+        } else {
+            if (syncOn) await db(sb.from("apex_medicines").insert({ name, stock, price }));
+            else clinicState.inventory.push({ id: Date.now(), name, stock, price });
+            await clinicLog('INVENTORY', `Added new medicine: ${name} with ${stock} initial units at KSh ${price.toFixed(2)}.`);
+        }
+    } catch (err) { return; }
     this.reset();
 });
 
 clinicRenderAll();
 
+/* ===== Supabase sync: login, shared data, realtime ===== */
+const sb = (window.supabase && window.supabase.createClient)
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY) : null;
+let syncOn = false;        // true while a staff member is signed in through Supabase
+let currentProfile = null; // that staff member's apex_profiles row
+let portalProfiles = [];   // all portal users (apex_profiles)
+let portalChannel = null, reloadTimer = null;
+const ROLE_LABEL = { admin: "Admin", pharmacist: "Pharmacist", assistant: "Pharmacy Assistant" };
+
+async function db(query) {
+    const { data, error } = await query;
+    if (error) { alert("Sync error: " + error.message); throw error; }
+    return data;
+}
+
+const mapProduct = r => ({ id: r.id, name: r.name, category: r.category, brand: r.brand, form: r.form, rx: r.rx, rating: r.rating,
+    basePrice: Number(r.base_price), discount: Number(r.discount), inStock: r.in_stock, images: r.images });
+
+/* Storefront products (public read) */
+async function loadProducts() {
+    if (!sb) return;
+    const { data, error } = await sb.from("apex_products").select("*").order("id");
+    if (error || !data || !data.length) return;
+    products.splice(0, products.length, ...data.map(mapProduct));
+    renderProducts(products);
+    if (syncOn) renderAdminTables();
+}
+
+/* Portal data (staff only) */
+async function loadPortalData() {
+    if (!syncOn) return;
+    const [emp, inv, vis, med, logs, profs] = await Promise.all([
+        sb.from("apex_employees").select("*").order("id"),
+        sb.from("apex_invoices").select("*").order("created_at"),
+        sb.from("apex_visits").select("*").order("visit_date", { ascending: false }),
+        sb.from("apex_medicines").select("*").order("name"),
+        sb.from("apex_logs").select("*").order("created_at", { ascending: false }).limit(500),
+        sb.from("apex_profiles").select("*").order("created_at")
+    ]);
+    const failed = [emp, inv, vis, med, logs, profs].find(r => r.error);
+    if (failed) { console.error(failed.error); alert("Could not load synced data: " + failed.error.message + "\nHave you run the setup SQL?"); return; }
+    employees.splice(0, employees.length, ...emp.data.map(r => ({ id: r.id, name: r.name, email: r.email, role: r.role, rate: Number(r.rate) })));
+    invoices = inv.data.map(r => ({ id: r.id, customer: r.customer, product: r.product, salesRep: r.sales_rep, amount: Number(r.amount), status: r.status }));
+    clinicState.visits = vis.data.map(r => ({ id: r.id, date: new Date(r.visit_date).toLocaleString(), name: r.name, age: r.age, gender: r.gender,
+        doctor: r.doctor, symptoms: r.symptoms, diagnosis: r.diagnosis, prescription: r.prescription }));
+    clinicState.inventory = med.data.map(r => ({ id: r.id, name: r.name, stock: r.stock, price: Number(r.price) }));
+    clinicState.logs = logs.data.map(r => ({ id: r.id, timestamp: new Date(r.created_at).toLocaleString(), category: r.category, description: r.description }));
+    portalProfiles = profs.data;
+    renderAdminTables();
+    clinicRenderAll();
+    renderPortalUsers();
+}
+
+function queueReload() {
+    clearTimeout(reloadTimer);
+    reloadTimer = setTimeout(() => { loadProducts(); loadPortalData(); }, 400);
+}
+
+function subscribePortal() {
+    if (!sb || portalChannel) return;
+    portalChannel = sb.channel("apex-portal");
+    ["apex_products", "apex_employees", "apex_invoices", "apex_visits", "apex_medicines", "apex_logs", "apex_profiles"]
+        .forEach(t => portalChannel.on("postgres_changes", { event: "*", schema: "public", table: t }, queueReload));
+    portalChannel.subscribe();
+}
+
+async function portalLogout() {
+    try { if (sb && syncOn) await sb.auth.signOut(); } catch (e) { /* ignore */ }
+    location.reload();
+}
+
+function applyRoleUI() {
+    const isAdmin = !syncOn || (currentProfile && currentProfile.role === "admin");
+    ["addUserForm", "addEmployeeForm"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = isAdmin ? "" : "none";
+    });
+    const badge = document.getElementById("syncBadge");
+    if (badge) badge.textContent = syncOn ? "● Synced" : "○ Offline (not synced)";
+}
+
+/* Staff roster (Settings) */
+document.getElementById("addEmployeeForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const emp = {
+        name: document.getElementById("empName").value.trim(),
+        email: document.getElementById("empEmail").value.trim().toLowerCase(),
+        role: document.getElementById("empRole").value,
+        rate: parseFloat(document.getElementById("empCommRate").value) || 0
+    };
+    if (syncOn) {
+        try { await db(sb.from("apex_employees").insert(emp)); } catch (err) { return; }
+        await loadPortalData();
+    } else {
+        employees.push(emp);
+        renderAdminTables();
+    }
+    this.reset();
+});
+
 /* ===== Portal users (Settings > User Accounts) ===== */
-const portalUsers = (function () {
+const portalUsers = (function () {   // offline-mode users only
     try { return JSON.parse(localStorage.getItem("apex_portal_users")) || []; } catch (e) { return []; }
 })();
 
@@ -737,6 +919,17 @@ function savePortalUsers() {
 function renderPortalUsers() {
     const body = document.getElementById("usersTableBody");
     if (!body) return;
+    if (syncOn) {
+        const isAdmin = currentProfile && currentProfile.role === "admin";
+        body.innerHTML = portalProfiles.length ? portalProfiles.map(u => `
+            <tr>
+                <td><b>${clinicEsc(u.name || "-")}</b></td>
+                <td>${clinicEsc(u.email)}</td>
+                <td>${clinicEsc(ROLE_LABEL[u.role] || u.role)}</td>
+                <td>${isAdmin && u.id !== currentProfile.id ? `<button type="button" class="action-btn btn-delete" onclick="removePortalUser('${u.id}')"><i class="fa fa-trash"></i> Remove</button>` : ""}</td>
+            </tr>`).join("") : `<tr><td colspan="4" class="clinic-empty">No portal users yet.</td></tr>`;
+        return;
+    }
     body.innerHTML = portalUsers.length ? portalUsers.map((u, i) => `
         <tr>
             <td><b>${clinicEsc(u.name)}</b></td>
@@ -746,19 +939,50 @@ function renderPortalUsers() {
         </tr>`).join("") : `<tr><td colspan="4" class="clinic-empty">No extra users added yet.</td></tr>`;
 }
 
-function removePortalUser(i) {
-    const u = portalUsers[i];
+async function removePortalUser(ref) {
+    if (syncOn) {
+        const u = portalProfiles.find(p => p.id === ref);
+        if (!u || !confirm("Remove portal access for " + (u.name || u.email) + "?")) return;
+        try { await db(sb.from("apex_profiles").delete().eq("id", ref)); } catch (err) { return; }
+        await loadPortalData();
+        return;
+    }
+    const u = portalUsers[ref];
     if (!u || !confirm("Remove user " + u.name + "?")) return;
-    portalUsers.splice(i, 1);
+    portalUsers.splice(ref, 1);
     savePortalUsers();
 }
 
-document.getElementById("addUserForm").addEventListener("submit", function (e) {
+document.getElementById("addUserForm").addEventListener("submit", async function (e) {
     e.preventDefault();
     const name = document.getElementById("userName").value.trim();
     const email = document.getElementById("userEmail").value.trim().toLowerCase();
     const password = document.getElementById("userPassword").value;
     const role = document.getElementById("userRole").value;
+
+    if (syncOn) {
+        if (!currentProfile || currentProfile.role !== "admin") { alert("Only an admin can add users."); return; }
+        const iso = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false, storageKey: "apex-isolated" }
+        });
+        const roleKey = role === "Admin" ? "admin" : role === "Pharmacy Assistant" ? "assistant" : "pharmacist";
+        const { data, error } = await iso.auth.signUp({ email, password, options: { data: { name } } });
+        let existing = false;
+        if (error) {
+            if (!/already/i.test(error.message)) { alert(error.message); return; }
+            existing = true;
+        } else if (data.user && data.user.identities && data.user.identities.length === 0) {
+            existing = true;
+        }
+        try { await db(sb.rpc("apex_grant_access", { p_email: email, p_name: name, p_role: roleKey })); } catch (err) { return; }
+        await loadPortalData();
+        alert(existing
+            ? "That email already had a login (maybe from another site), so portal access was granted. They sign in with their existing password."
+            : "User added. They can sign in with that email and password.");
+        this.reset();
+        return;
+    }
+
     if (email === "adminacaciabooks@gmail.com" || portalUsers.some(u => u.email === email)) {
         alert("A user with this email already exists.");
         return;
@@ -769,6 +993,12 @@ document.getElementById("addUserForm").addEventListener("submit", function (e) {
 });
 
 renderPortalUsers();
+loadProducts();
+if (sb) {
+    sb.channel("apex-products")
+        .on("postgres_changes", { event: "*", schema: "public", table: "apex_products" }, queueReload)
+        .subscribe();
+}
 
 /* ===== Appearance (from acacia-inventory): sidebar colour, text colour, font, font size ===== */
 /* Acacia Appearance - sidebar colour, sidebar text colour, font and font size.
