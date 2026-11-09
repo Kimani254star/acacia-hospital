@@ -31,3 +31,5 @@ th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);white
 .brand img.logo{width:40px;height:40px;border-radius:9px;flex:none;background:#fdfcf8;object-fit:contain}
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.tabs button{border:1px solid var(--g);background:var(--panel);color:var(--g);border-radius:99px;padding:5px 14px;font:inherit;cursor:pointer}.tabs button.on{background:var(--g);color:#fff}
 #themeBtn{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:40;width:42px;height:42px;border-radius:50%;border:1px solid rgba(128,128,128,.45);background:var(--panel,#fff);font-size:20px;line-height:1;cursor:pointer;box-shadow:0 2px 8px #0003}
+body.acxsb-on #themeBtn{right:11rem}body.acxsb-on #aclOut{right:calc(11rem + 50px)}
+@media(max-width:700px){body.acxsb-on #themeBtn{right:62px}body.acxsb-on #aclOut{right:112px}}

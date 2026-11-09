@@ -1,4 +1,4 @@
-AcaciaLogin.init({app:'hospital',name:'Acacia Hospital',color:'#1f6b4f',price:800});
+AcaciaLogin.init({app:'hospital',name:'Acacia Hospital',color:'#1f6b4f',price:800,landing:'landing.html'});
 /* Dark mode: follows the device setting until the toggle is used; choice is remembered. */
 (function(){var K='acacia_theme',r=document.documentElement,b=document.createElement('button');
 function cur(){var s;try{s=localStorage.getItem(K)}catch(e){}return s||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}

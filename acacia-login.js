@@ -4,6 +4,14 @@
 (function (w) {
   'use strict';
   var KEY = 'acacia_session', cfg = {};
+  w.acxSession = function () { return ses(); };
+  w.toggleSupportPopup = function () {
+    var p = document.getElementById('aclSup'); if (p) { p.remove(); return; }
+    p = document.createElement('div'); p.id = 'aclSup';
+    p.style.cssText = 'position:fixed;right:11rem;top:5rem;z-index:9000;width:280px;max-width:calc(100vw - 24px);background:#fff;color:#1b1b1b;border-radius:12px;box-shadow:0 12px 40px #0006;padding:16px;font-size:14px;line-height:1.6';
+    p.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center"><b>Acacia Support</b><button type="button" style="border:0;background:none;font-size:18px;cursor:pointer" aria-label="Close">\u2715</button></div><p style="margin:8px 0 0">Call us:<br><a href="tel:0717346231">0717 346 231</a><br><a href="tel:0731858997">0731 858 997</a></p><p style="margin:8px 0 0">Email:<br><a href="mailto:developeracaciabooks@gmail.com">developeracaciabooks@gmail.com</a></p>';
+    p.querySelector('button').onclick = function () { p.remove(); }; document.body.appendChild(p);
+  };
   function ses() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } }
   function $(id) { return document.getElementById(id); }
   function show(el, m) { el.textContent = m; el.hidden = false; }
@@ -23,6 +31,7 @@
     document.head.appendChild(s);
   }
   function build() {
+    var land = cfg.landing ? landing() : null;
     var price = cfg.price || 800, f = function (x) { return 'KES ' + x.toLocaleString('en-US'); };
     var o = document.createElement('div'); o.id = 'aclOv';
     o.innerHTML = '<div class="acl-card"><div class="acl-head"><img src="logo.png" alt="Acacia logo"><h1>' + cfg.name + '</h1><p>Sign in or create your workspace account.</p></div>' +
@@ -40,6 +49,9 @@
       '<p class="acl-note" id="regPlanNote"></p><label class="acl-chk"><input type="checkbox" required>I agree to the Acacia Terms &amp; Privacy Policy.</label>' +
       '<button class="acl-go">Create Account</button><p class="acl-err" id="suError" hidden></p><p class="acl-note">Creates a new company account. Acacia support approves new accounts before you can sign in.</p></form></div>';
     document.body.appendChild(o);
+    var hide = function (on) { document.documentElement.style.overflow = on ? 'hidden' : ''; };
+    if (land) { o.style.display = 'none'; hide(true); var back = document.createElement('a'); back.textContent = '\u2190 Back to site'; back.href = '#'; back.style.cssText = 'display:block;padding:12px 20px 0;font-size:13px;color:inherit;opacity:.75'; o.firstChild.insertBefore(back, o.firstChild.children[1]); back.onclick = function (e) { e.preventDefault(); o.style.display = 'none'; land.style.display = 'block'; hide(true); };
+      w.addEventListener('message', function (e) { var m = e.data && e.data.acx; if (!m) return; land.style.display = 'none'; o.style.display = 'grid'; tab(m !== 'register'); }); }
     function tab(s) { $('aclTi').className = s ? 'on' : ''; $('aclTu').className = s ? '' : 'on'; $('aclSi').hidden = !s; $('aclSu').hidden = s; }
     $('aclTi').onclick = function () { tab(true); }; $('aclTu').onclick = function () { tab(false); };
     if (w.acxPlanChanged) w.acxPlanChanged();
@@ -64,6 +76,10 @@
       localStorage.setItem(KEY, JSON.stringify({ email: email, name: name, companyId: r.companyId, companyName: company })); location.reload();
     };
   }
+  function landing() {
+    var f = document.createElement('iframe'); f.id = 'aclLand'; f.src = cfg.landing; f.title = 'Acacia'; f.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;border:0;z-index:90;background:#fff';
+    document.body.appendChild(f); return f;
+  }
   function init(c) {
     cfg = c; AcaciaCloud.init({ app: c.app, dataKey: function (x) { return 'acx_' + c.app + '_local_' + x; } });
     style(); var s = ses();
@@ -71,6 +87,7 @@
     var b = document.createElement('button'); b.id = 'aclOut'; b.type = 'button'; b.textContent = 'Sign out'; b.title = (s.name || s.email) + ' \u00b7 ' + (s.companyName || '');
     b.onclick = function () { try { AcaciaCloud.stop(); } catch (e) {} localStorage.removeItem(KEY); location.reload(); };
     document.body.appendChild(b);
+    var m = document.querySelector('main'); if (m) m.classList.add('acxsb-pad');
   }
   w.AcaciaLogin = { init: init, session: ses, companyId: function () { var s = ses(); return s ? s.companyId : 'guest'; } };
 })(window);
