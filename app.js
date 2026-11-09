@@ -1,3 +1,4 @@
+AcaciaLogin.init({app:'hospital',name:'Acacia Hospital',color:'#1f6b4f',price:800});
 /* Dark mode: follows the device setting until the toggle is used; choice is remembered. */
 (function(){var K='acacia_theme',r=document.documentElement,b=document.createElement('button');
 function cur(){var s;try{s=localStorage.getItem(K)}catch(e){}return s||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
@@ -24,10 +25,10 @@ const M=[
 ...INV.map(([n,f])=>({k:'inv_'+n.toLowerCase().replace(/ /g,''),g:'Inventory',n,f,s:[]})),{k:'reports',n:'Reports & Analytics',r:1},{k:'appearance',n:'Appearance',a:1,s:[]}
 ];
 let cur='home',q='',db;
-try{db=JSON.parse(localStorage.getItem('acacia_hosp2'))}catch(e){}
+try{db=JSON.parse(localStorage.getItem('acacia_hosp2_'+AcaciaLogin.companyId()))}catch(e){}
 if(!db){db={};M.forEach(m=>{if(!m.r)db[m.k]=m.s.map(r=>r.slice())})}
 M.forEach(m=>{if(!m.r&&!db[m.k])db[m.k]=[]});
-const save=()=>{try{localStorage.setItem('acacia_hosp2',JSON.stringify(db))}catch(e){}};
+const save=()=>{try{localStorage.setItem('acacia_hosp2_'+AcaciaLogin.companyId(),JSON.stringify(db))}catch(e){}};
 const E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const K=n=>'KES '+n.toLocaleString();
 function nav(){document.getElementById('nav').innerHTML='<div class="brand"><img src="logo.png" alt="Acacia logo" class="logo">Acacia Hospital</div><button class="'+(cur=='home'?'on active':'')+'" onclick="go(\'home\')">Dashboard</button>'+M.filter((m,i)=>!m.g||M.findIndex(x=>x.g==m.g)==i).map(m=>{const on=cur==m.k||(m.g&&(M.find(x=>x.k==cur)||{}).g==m.g);return '<button class="'+(on?'on active':'')+'" onclick="go(\''+m.k+'\')">'+(m.g||m.n)+'</button>'}).join('')}
