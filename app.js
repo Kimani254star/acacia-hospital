@@ -22,9 +22,9 @@ const M=[
 {k:'wards',n:'Ward & Beds',f:[T('Ward'),T('Bed'),T('Type','select',['General','HDU','ICU','Private']),T('Status','select',['Free','Occupied','Cleaning'])],s:[]},
 {k:'theatre',n:'Theatre',f:[T('Patient'),T('Procedure'),T('Surgeon'),T('Date','date'),T('Status','select',['Scheduled','In theatre','Completed'])],s:[]},
 {k:'procure',n:'Procurement & Suppliers',f:[T('Supplier'),T('Item'),T('Qty','number'),T('Cost (KES)','number'),T('Status','select',['Ordered','Received'])],s:[]},
-...INV.map(([n,f])=>({k:'inv_'+n.toLowerCase().replace(/ /g,''),g:'Inventory',n,f,s:[]})),{k:'reports',n:'Reports & Analytics',r:1},{k:'appearance',n:'Appearance',a:1,s:[]}
+...INV.map(([n,f])=>({k:'inv_'+n.toLowerCase().replace(/ /g,''),g:'Inventory',n,f,s:[]})),{k:'reports',n:'Reports & Analytics',r:1},{k:'settings',n:'Settings',a:1,s:[]}
 ];
-let cur='home',q='',db;
+let cur='home',q='',db,editing=null;
 try{db=JSON.parse(localStorage.getItem('acacia_hosp2_'+AcaciaLogin.companyId()))}catch(e){}
 if(!db){db={};M.forEach(m=>{if(!m.r)db[m.k]=m.s.map(r=>r.slice())})}
 M.forEach(m=>{if(!m.r&&!db[m.k])db[m.k]=[]});
@@ -34,10 +34,10 @@ const E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"
 const K=n=>'KES '+n.toLocaleString();
 function nav(){document.getElementById('nav').innerHTML='<div class="brand"><img src="logo.png" alt="Acacia logo" class="logo">Acacia Hospital</div><button class="'+(cur=='home'?'on active':'')+'" onclick="go(\'home\')">Dashboard</button>'+M.filter((m,i)=>!m.g||M.findIndex(x=>x.g==m.g)==i).map(m=>{const on=cur==m.k||(m.g&&(M.find(x=>x.k==cur)||{}).g==m.g);return '<button class="'+(on?'on active':'')+'" onclick="go(\''+m.k+'\')">'+(m.g||m.n)+'</button>'}).join('')}
 function go(k){cur=k;q='';document.getElementById('nav').classList.remove('open');render()}
-function render(){nav();const el=document.getElementById('main');
+function render(){editing=null;nav();const el=document.getElementById('main');
 if(cur=='home'){el.innerHTML='<h1>Acacia Hospital</h1><p class="sub">Hospital & Pharmacy Management System · Acacia Tec Developers</p><div class="grid">'+M.filter(m=>!m.r&&!m.a).map(m=>'<div class="card" onclick="go(\''+m.k+'\')"><b>'+db[m.k].length+'</b><span>'+(m.g?m.g+' · ':'')+m.n+'</span></div>').join('')+'</div>'+kpis();return}
 const m=M.find(x=>x.k==cur);
-if(m.a){el.innerHTML='<h1>Appearance</h1><div data-acacia-appearance></div>';return}
+if(m.a){el.innerHTML='<h1>Settings</h1><div id="acxSet"></div>';ACX_SET.mount(document.getElementById('acxSet'),{app:'Hospital',store:()=>db,save:()=>save(),defaultType:'Hospital',types:['Hospital','Clinic','Pharmacy','Dispensary','Laboratory','Medical Centre'],defaultRole:'Receptionist',roles:['Administrator','Doctor','Nurse','Pharmacist','Lab Technician','Receptionist','Accountant']});return}
 if(m.r){el.innerHTML='<h1>'+m.n+'</h1><p class="sub">Live summary from the records you have entered.</p>'+kpis()+reportTbl();return}
 const rows=db[m.k];
 el.innerHTML='<h1>'+(m.g||m.n)+'</h1>'+(m.g?'<div class="tabs">'+M.filter(x=>x.g==m.g).map(x=>'<button class="'+(x.k==cur?'on':'')+'" onclick="go(\''+x.k+'\')">'+x.n+'</button>').join('')+'</div>':'')+'<p class="sub">'+rows.length+' record'+(rows.length==1?'':'s')+'</p><div class="box"><form onsubmit="add(event)">'+m.f.map((f,i)=>'<div><label>'+f.l+'</label>'+(f.t=='select'?'<select name="f'+i+'">'+f.o.map(o=>'<option>'+o+'</option>').join('')+'</select>':'<input name="f'+i+'" type="'+f.t+'" required>')+'</div>').join('')+'<button class="btn">Add record</button></form></div>'+
@@ -45,9 +45,10 @@ el.innerHTML='<h1>'+(m.g||m.n)+'</h1>'+(m.g?'<div class="tabs">'+M.filter(x=>x.g
 function list(){const m=M.find(x=>x.k==cur),L=document.getElementById('list');
 const rows=db[m.k].map((r,i)=>[r,i]).filter(([r])=>r.join(' ').toLowerCase().includes(q.toLowerCase()));
 if(!rows.length){L.innerHTML='<div class="empty">No records found. Add one using the form above.</div>';return}
-L.innerHTML='<table><tr>'+m.f.map(f=>'<th>'+f.l+'</th>').join('')+'<th></th></tr>'+rows.map(([r,i])=>'<tr>'+r.map((c,j)=>'<td>'+(m.f[j].t=='select'?'<span class="tag">'+E(c)+'</span>':E(c))+'</td>').join('')+'<td><button class="del" onclick="rm('+i+')">Delete</button></td></tr>').join('')+'</table>'}
+L.innerHTML='<table><tr>'+m.f.map(f=>'<th>'+f.l+'</th>').join('')+'<th></th></tr>'+rows.map(([r,i])=>'<tr>'+r.map((c,j)=>'<td>'+(m.f[j].t=='select'?'<span class="tag">'+E(c)+'</span>':E(c))+'</td>').join('')+'<td>'+ACX_ACT({edit:'editRow('+i+')',del:'rm('+i+')',title:m.n+' record'})+'</td></tr>').join('')+'</table>'}
 function add(e){e.preventDefault();const m=M.find(x=>x.k==cur),fd=new FormData(e.target);
-db[m.k].unshift(m.f.map((f,i)=>f.t=='number'?Number(fd.get('f'+i)):fd.get('f'+i)));save();render()}
+const row=m.f.map((f,i)=>f.t=='number'?Number(fd.get('f'+i)):fd.get('f'+i));if(editing!=null){db[m.k][editing]=row;editing=null}else db[m.k].unshift(row);save();render()}
+function editRow(i){const m=M.find(x=>x.k==cur),r=db[m.k][i],fm=document.querySelector('#main form');if(!fm||!r)return;editing=i;m.f.forEach((f,j)=>{const el=fm.elements['f'+j];if(el)el.value=r[j]==null?'':r[j]});const b=fm.querySelector('button.btn');if(b)b.textContent='Save changes';fm.scrollIntoView({behavior:'smooth',block:'center'})}
 function rm(i){const m=M.find(x=>x.k==cur);if(confirm('Delete this record?')){db[m.k].splice(i,1);save();list();}}
 function stats(){const paid=db.billing.filter(r=>r[4]=='Paid').reduce((a,r)=>a+r[2],0),due=db.billing.filter(r=>r[4]=='Unpaid').reduce((a,r)=>a+r[2],0);
 const occ=db.wards.filter(r=>r[3]=='Occupied').length,low=db.pharmacy.filter(r=>r[2]<20),q=db.opd.filter(r=>r[4]=='Waiting').length;
