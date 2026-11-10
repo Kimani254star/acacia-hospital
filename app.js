@@ -29,6 +29,7 @@ try{db=JSON.parse(localStorage.getItem('acacia_hosp2_'+AcaciaLogin.companyId()))
 if(!db){db={};M.forEach(m=>{if(!m.r)db[m.k]=m.s.map(r=>r.slice())})}
 M.forEach(m=>{if(!m.r&&!db[m.k])db[m.k]=[]});
 const save=()=>{try{localStorage.setItem('acacia_hosp2_'+AcaciaLogin.companyId(),JSON.stringify(db))}catch(e){}};
+try{AcaciaCloud.onRemote(function(){try{var x=JSON.parse(localStorage.getItem('acacia_hosp2_'+AcaciaLogin.companyId()));if(x)db=x}catch(e){}},function(){render()})}catch(e){}
 const E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const K=n=>'KES '+n.toLocaleString();
 function nav(){document.getElementById('nav').innerHTML='<div class="brand"><img src="logo.png" alt="Acacia logo" class="logo">Acacia Hospital</div><button class="'+(cur=='home'?'on active':'')+'" onclick="go(\'home\')">Dashboard</button>'+M.filter((m,i)=>!m.g||M.findIndex(x=>x.g==m.g)==i).map(m=>{const on=cur==m.k||(m.g&&(M.find(x=>x.k==cur)||{}).g==m.g);return '<button class="'+(on?'on active':'')+'" onclick="go(\''+m.k+'\')">'+(m.g||m.n)+'</button>'}).join('')}
